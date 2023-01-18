@@ -4,12 +4,18 @@
   
     
     <entry>
-      <title>Day44 xml&amp;xee&amp;无回显&amp;DTD实体&amp;伪协议&amp;代码审计</title>
-      <link href="/2023/01/18/Day44-xml-xee-%E6%97%A0%E5%9B%9E%E6%98%BE-DTD%E5%AE%9E%E4%BD%93-%E4%BC%AA%E5%8D%8F%E8%AE%AE-%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/"/>
-      <url>/2023/01/18/Day44-xml-xee-%E6%97%A0%E5%9B%9E%E6%98%BE-DTD%E5%AE%9E%E4%BD%93-%E4%BC%AA%E5%8D%8F%E8%AE%AE-%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/</url>
+      <title>Day41 xml&amp;xee&amp;无回显&amp;DTD实体&amp;伪协议&amp;代码审计</title>
+      <link href="/2023/01/18/Day41-xml-xee-%E6%97%A0%E5%9B%9E%E6%98%BE-DTD%E5%AE%9E%E4%BD%93-%E4%BC%AA%E5%8D%8F%E8%AE%AE-%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/"/>
+      <url>/2023/01/18/Day41-xml-xee-%E6%97%A0%E5%9B%9E%E6%98%BE-DTD%E5%AE%9E%E4%BD%93-%E4%BC%AA%E5%8D%8F%E8%AE%AE-%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/</url>
       
         <content type="html"><![CDATA[<h2 id="知识点"><a href="#知识点" class="headerlink" title="#知识点:"></a>#知识点:</h2><h4 id="思路点："><a href="#思路点：" class="headerlink" title="#思路点："></a>#思路点：</h4><p>参考：<a href="https://www.cnblogs.com/20175211lyz/p/11413335.html">https://www.cnblogs.com/20175211lyz/p/11413335.html</a></p><h5 id="XXE黑盒发现："><a href="#XXE黑盒发现：" class="headerlink" title="-XXE黑盒发现："></a>-XXE黑盒发现：</h5><p>1、获取得到Content-Type或数据类型为xml时，尝试进行xml语言payload进行测试</p><p>2、不管获取的Content-Type类型或数据传输类型，均可尝试修改后提交测试xxe</p><p>3、XXE不仅在数据传输上可能存在漏洞，同样在文件上传引用插件解析或预览也会造成文件中的XXE Payload被执行</p><h5 id="XXE白盒发现："><a href="#XXE白盒发现：" class="headerlink" title="-XXE白盒发现："></a>-XXE白盒发现：</h5><p>1、可通过应用功能追踪代码定位审计</p><p>2、可通过脚本特定函数搜索定位审计</p><p>3、可通过伪协议玩法绕过相关修复等</p><h5 id="详细点："><a href="#详细点：" class="headerlink" title="#详细点："></a>#详细点：</h5><p>XML被设计为传输和存储数据，XML文档结构包括XML声明、DTD文档类型定义（可选）、文档元素，其焦点是数据的内容，其把数据从HTML分离，是独立于软件和硬件的信息传输工具。XXE漏洞全称XML External Entity Injection，即xml外部实体注入漏洞，XXE漏洞发生在应用程序解析XML输入时，没有禁止外部实体的加载，导致可加载恶意外部文件，造成文件读取、命令执行、内网端口扫描、攻击内网网站等危害。</p><h5 id="XML-与-HTML-的主要差异："><a href="#XML-与-HTML-的主要差异：" class="headerlink" title="XML 与 HTML 的主要差异："></a>XML 与 HTML 的主要差异：</h5><p>XML 被设计为传输和存储数据，其焦点是数据的内容。</p><p>HTML 被设计用来显示数据，其焦点是数据的外观。</p><p>HTML 旨在显示信息 ，而 XML 旨在传输信息。</p><h5 id="XXE修复防御方案："><a href="#XXE修复防御方案：" class="headerlink" title="XXE修复防御方案："></a>XXE修复防御方案：</h5><h6 id="方案1-禁用外部实体"><a href="#方案1-禁用外部实体" class="headerlink" title="-方案1-禁用外部实体"></a>-方案1-禁用外部实体</h6><p><code>PHP:</code></p><p><code>libxml_disable_entity_loader(true);</code></p><p><code>JAVA:</code></p><p><code>DocumentBuilderFactory dbf =DocumentBuilderFactory.newInstance();dbf.setExpandEntityReferences(false);</code></p><p><code>Python：</code></p><p><code>from lxml import etreexmlData = etree.parse(xmlSource,etree.XMLParser(resolve_entities=False))</code></p><h6 id="方案2-过滤用户提交的XML数据"><a href="#方案2-过滤用户提交的XML数据" class="headerlink" title="-方案2-过滤用户提交的XML数据"></a>-方案2-过滤用户提交的XML数据</h6><p>过滤关键词：&lt;!DOCTYPE和&lt;!ENTITY，或者SYSTEM和PUBLIC</p><h1 id="案例演示-amp-复现"><a href="#案例演示-amp-复现" class="headerlink" title="#案例演示&amp;复现"></a>#案例演示&amp;复现</h1><p>➢ XML&amp;XXE-黑盒-原理&amp;探针&amp;利用&amp;玩法等</p><p>➢ XML&amp;XXE-前端-CTF&amp;Jarvisoj&amp;探针&amp;利用</p><p>➢ XML&amp;XXE-白盒-CMS&amp;PHPSHE&amp;无回显审计</p><blockquote><p>➢ XML&amp;XXE-白盒-CMS&amp;PHPSHE&amp;无回显审计</p></blockquote>]]></content>
       
+      
+      <categories>
+          
+          <category> Web攻防 </category>
+          
+      </categories>
       
       
     </entry>
@@ -24,6 +30,12 @@
         <content type="html"><![CDATA[<h2 id="知识点："><a href="#知识点：" class="headerlink" title="#知识点："></a>#知识点：</h2><p>1、CSRF-审计-复现测试&amp;同源策略</p><p>2、SSRF-审计-功能追踪&amp;函数搜索</p><h4 id="详细点："><a href="#详细点：" class="headerlink" title="#详细点："></a>#详细点：</h4><p>CSRF全称：Cross-site request forgery，即，跨站请求伪造，也被称为 “One Click Attack” 或 “Session Riding”，通常缩写为CSRF或者XSRF，是一种对网站的恶意利用。举个生活中的例子：就是某个人点了个奇怪的链接，自己什么也没输，但自己的qq号或其他的号就被盗了。即该攻击可以在受害者不知情的情况下以受害者名义伪造请求，执行恶意操作，具有很大的危害性。</p><h5 id="CSRF的攻击过程两个条件："><a href="#CSRF的攻击过程两个条件：" class="headerlink" title="CSRF的攻击过程两个条件："></a>CSRF的攻击过程两个条件：</h5><p>1、目标用户已经登录了网站，能够执行网站的功能。</p><p>2、目标用户访问了攻击者构造的URL。</p><h5 id="CSRF安全问题黑盒怎么判断："><a href="#CSRF安全问题黑盒怎么判断：" class="headerlink" title="CSRF安全问题黑盒怎么判断："></a>CSRF安全问题黑盒怎么判断：</h5><p>1、看验证来源不-修复</p><p>2、看凭据有无token–修复</p><p>3、看关键操作有无验证-修复</p><h5 id="CSRF安全问题白盒怎么审计："><a href="#CSRF安全问题白盒怎么审计：" class="headerlink" title="-CSRF安全问题白盒怎么审计："></a>-CSRF安全问题白盒怎么审计：</h5><p>同黑盒思路一样，代码中分析上述三看</p><p>SSRF(Server-Side Request Forgery:服务器端请求伪造) 是一种由攻击者构造形成由服务端发起请求的一个安全漏洞。一般情况下，SSRF攻击的目标是从外网无法访问的内部系统。（正是因为它是由服务端发起的，所以它能够请求到与它相连而与外网隔离的内部系统）SSRF 形成的原因大都是由于服务端提供了从其他服务器应用获取数据的功能且没有对目标地址做过滤与限制。比如从指定URL地址获取网页文本内容，加载指定地址的图片，下载等等。</p><h5 id="SSRF黑盒可能出现的地方："><a href="#SSRF黑盒可能出现的地方：" class="headerlink" title="-SSRF黑盒可能出现的地方："></a>-SSRF黑盒可能出现的地方：</h5><p>1.社交分享功能：获取超链接的标题等内容进行显示</p><p>2.转码服务：通过URL地址把原地址的网页内容调优使其适合手机屏幕浏览</p><p>3.在线翻译：给网址翻译对应网页的内容</p><p>4.图片加载&#x2F;下载：例如富文本编辑器中的点击下载图片到本地；通过URL地址加载或下载图片</p><p>5.图片&#x2F;文章收藏功能：主要其会取URL地址中title以及文本的内容作为显示以求一个好的用具体验</p><p>6.云服务厂商：它会远程执行一些命令来判断网站是否存活等，所以如果可以捕获相应的信息，就可以进行ssrf测试</p><p>7.网站采集，网站抓取的地方：一些网站会针对你输入的url进行一些信息采集工作</p><p>8.数据库内置功能：数据库的比如mongodb的copyDatabase函数</p><p>9.邮件系统：比如接收邮件服务器地址</p><p>10.编码处理, 属性信息处理，文件处理：比如ffpmg，ImageMagick，docx，pdf，xml处理器等</p><p>11.未公开的api实现以及其他扩展调用URL的功能：可以利用google 语法加上这些关键字去寻找SSRF漏洞</p><p>一些的url中的关键字：share、wap、url、link、src、source、target、u、3g、display、sourceURl、imageURL、domain……</p><p>12.从远程服务器请求资源（upload from url 如discuz！；import &amp; expost rss feed 如web blog；使用了xml引擎对象的地方 如wordpress xmlrpc.php）</p><h5 id="SSRF白盒可能出现的地方："><a href="#SSRF白盒可能出现的地方：" class="headerlink" title="-SSRF白盒可能出现的地方："></a>-SSRF白盒可能出现的地方：</h5><p>1、功能点抓包指向代码块审计</p><p>2、功能点函数定位代码块审计</p><h5 id="SSRF常见安全修复防御方案："><a href="#SSRF常见安全修复防御方案：" class="headerlink" title="-SSRF常见安全修复防御方案："></a>-SSRF常见安全修复防御方案：</h5><p>1、禁用跳转</p><p>2、禁用不需要的协议</p><p>3、固定或限制资源地址</p><p>4、错误信息统一信息处理</p><h5 id="系列内容点："><a href="#系列内容点：" class="headerlink" title="#系列内容点："></a>#系列内容点：</h5><p>1、CSRF&amp;SSRF&amp;原理&amp;利用&amp;协议等</p><p>2、CSRF&amp;SSRF&amp;黑盒&amp;审计&amp;修复等</p><h5 id="演示案例："><a href="#演示案例：" class="headerlink" title="演示案例："></a>演示案例：</h5><p> ➢ 代码审计-CSRF-SCMSFH无验证</p><p> ➢ 代码审计-CSRF-ZBLOG同源策略</p><p> ➢ 代码审计-SSRF-Yzmcms功能&amp;函数</p>]]></content>
       
       
+      <categories>
+          
+          <category> Web攻防 </category>
+          
+      </categories>
+      
       
     </entry>
     
@@ -34,7 +46,7 @@
       <link href="/2023/01/18/%E7%AC%AC%E4%B8%80%E7%AF%87%E5%8D%9A%E5%AE%A2/"/>
       <url>/2023/01/18/%E7%AC%AC%E4%B8%80%E7%AF%87%E5%8D%9A%E5%AE%A2/</url>
       
-        <content type="html"><![CDATA[<p>.撒拉嘿哟撒拉嘿哟~~</p><p><img src="/images/%E7%AC%AC%E4%B8%80%E7%AF%87%E5%8D%9A%E5%AE%A2/Capture001.png"></p><p>我他妈今天终于成功了！！！搭建博客，明天开始写博客笔记咯！！！！潼潼~ ~ ~我爱你！！！</p>]]></content>
+        <content type="html"><![CDATA[<p>.撒拉嘿哟撒拉嘿哟~~</p><p><img src="/images/%E7%AC%AC%E4%B8%80%E7%AF%87%E5%8D%9A%E5%AE%A2/qyc.jpg"></p><p>我他妈今天终于成功了！！！搭建博客，明天开始写博客笔记咯！！！！潼潼~ ~ ~我爱你！！！</p>]]></content>
       
       
       
