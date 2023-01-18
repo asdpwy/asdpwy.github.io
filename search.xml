@@ -4,6 +4,32 @@
   
     
     <entry>
+      <title>Day44 xml&amp;xee&amp;无回显&amp;DTD实体&amp;伪协议&amp;代码审计</title>
+      <link href="/2023/01/18/Day44-xml-xee-%E6%97%A0%E5%9B%9E%E6%98%BE-DTD%E5%AE%9E%E4%BD%93-%E4%BC%AA%E5%8D%8F%E8%AE%AE-%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/"/>
+      <url>/2023/01/18/Day44-xml-xee-%E6%97%A0%E5%9B%9E%E6%98%BE-DTD%E5%AE%9E%E4%BD%93-%E4%BC%AA%E5%8D%8F%E8%AE%AE-%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/</url>
+      
+        <content type="html"><![CDATA[<h2 id="知识点"><a href="#知识点" class="headerlink" title="#知识点:"></a>#知识点:</h2><p>#思路点：</p><p>参考：<a href="https://www.cnblogs.com/20175211lyz/p/11413335.html">https://www.cnblogs.com/20175211lyz/p/11413335.html</a></p><p>-XXE黑盒发现：</p><p>1、获取得到Content-Type或数据类型为xml时，尝试进行xml语言payload进行测试</p><p>2、不管获取的Content-Type类型或数据传输类型，均可尝试修改后提交测试xxe</p><p>3、XXE不仅在数据传输上可能存在漏洞，同样在文件上传引用插件解析或预览也会造成文件中的XXE Payload被执行</p><p>-XXE白盒发现：</p><p>1、可通过应用功能追踪代码定位审计</p><p>2、可通过脚本特定函数搜索定位审计</p><p>3、可通过伪协议玩法绕过相关修复等</p><p>#详细点：</p><p>XML被设计为传输和存储数据，XML文档结构包括XML声明、DTD文档类型定义（可选）、文档元素，其焦点是数据的内容，其把数据从HTML分离，是独立于软件和硬件的信息传输工具。XXE漏洞全称XML External Entity Injection，即xml外部实体注入漏洞，XXE漏洞发生在应用程序解析XML输入时，没有禁止外部实体的加载，导致可加载恶意外部文件，造成文件读取、命令执行、内网端口扫描、攻击内网网站等危害。</p><p>XML 与 HTML 的主要差异：</p><p>XML 被设计为传输和存储数据，其焦点是数据的内容。</p><p>HTML 被设计用来显示数据，其焦点是数据的外观。</p><p>HTML 旨在显示信息 ，而 XML 旨在传输信息。</p><p>XXE修复防御方案：</p><p>-方案1-禁用外部实体</p><p>PHP:</p><p>libxml_disable_entity_loader(true);</p><p>JAVA:</p><p>DocumentBuilderFactory dbf &#x3D;DocumentBuilderFactory.newInstance();dbf.setExpandEntityReferences(false);</p><p>Python：</p><p>from lxml import etreexmlData &#x3D; etree.parse(xmlSource,etree.XMLParser(resolve_entities&#x3D;False))</p><p>-方案2-过滤用户提交的XML数据</p><p>过滤关键词：&lt;!DOCTYPE和&lt;!ENTITY，或者SYSTEM和PUBLIC</p><h1 id="案例演示-amp-复现"><a href="#案例演示-amp-复现" class="headerlink" title="#案例演示&amp;复现"></a>#案例演示&amp;复现</h1><p>➢ XML&amp;XXE-黑盒-原理&amp;探针&amp;利用&amp;玩法等</p><p>➢ XML&amp;XXE-前端-CTF&amp;Jarvisoj&amp;探针&amp;利用</p><p>➢ XML&amp;XXE-白盒-CMS&amp;PHPSHE&amp;无回显审计</p><blockquote><p>➢ XML&amp;XXE-白盒-CMS&amp;PHPSHE&amp;无回显审计</p></blockquote><p><img src="/../images/Day44-xml-xee-%E6%97%A0%E5%9B%9E%E6%98%BE-DTD%E5%AE%9E%E4%BD%93-%E4%BC%AA%E5%8D%8F%E8%AE%AE-%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/image-20230118171444735.png" alt="image-20230118171444735"></p>]]></content>
+      
+      
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>第一篇博客</title>
+      <link href="/2023/01/18/%E7%AC%AC%E4%B8%80%E7%AF%87%E5%8D%9A%E5%AE%A2/"/>
+      <url>/2023/01/18/%E7%AC%AC%E4%B8%80%E7%AF%87%E5%8D%9A%E5%AE%A2/</url>
+      
+        <content type="html"><![CDATA[<p>.撒拉嘿哟撒拉嘿哟~~</p><p><img src="/images/%E7%AC%AC%E4%B8%80%E7%AF%87%E5%8D%9A%E5%AE%A2/Capture001.png"></p><p>我他妈今天终于成功了！！！搭建博客，明天开始写博客笔记咯！！！！潼潼~ ~ ~我爱你！！！</p>]]></content>
+      
+      
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>Hello World</title>
       <link href="/2023/01/17/hello-world/"/>
       <url>/2023/01/17/hello-world/</url>
