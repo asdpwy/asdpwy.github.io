@@ -2,6 +2,15 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://example.com/2023/01/31/Day42-WEB%E6%94%BB%E9%98%B2-%E9%80%9A%E7%94%A8%E6%BC%8F%E6%B4%9E-%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB-LFI-RFI-%E4%BC%AA%E5%8D%8F%E8%AE%AE%E7%BC%96%E7%A0%81%E7%AE%97%E6%B3%95-%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/</loc>
+    
+    <lastmod>2023-01-31</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>http://example.com/2023/01/18/Day41-xml-xee-%E6%97%A0%E5%9B%9E%E6%98%BE-DTD%E5%AE%9E%E4%BD%93-%E4%BC%AA%E5%8D%8F%E8%AE%AE-%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/</loc>
     
     <lastmod>2023-01-30</lastmod>
@@ -58,7 +67,7 @@
 
   <url>
     <loc>http://example.com/</loc>
-    <lastmod>2023-01-30</lastmod>
+    <lastmod>2023-01-31</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
@@ -68,7 +77,7 @@
   
   <url>
     <loc>http://example.com/categories/Web%E6%94%BB%E9%98%B2/</loc>
-    <lastmod>2023-01-30</lastmod>
+    <lastmod>2023-01-31</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
