@@ -1,0 +1,230 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"><title>Day51 WEB攻防-通用漏洞&amp;验证码识别&amp;复用&amp;调用&amp;找回密码重定向&amp;状态值 | ai潼</title><meta name="author" content="pwy"><meta name="copyright" content="pwy"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="#知识点：1、找回密码逻辑机制-回显&amp;验证码&amp;指向 2、验证码验证安全机制-爆破&amp;复用&amp;识别 3、找回密码-客户端回显&amp;Response状态值&amp;修改重定向 4、验证码技术-验证码爆破，验证码复用，验证码识别等 #详细点：找回密码流程安全：1、用回显状态判断-res前端判断不安全 2、用用户名重定向-修改标示绕过验证 3、验证码回显显示-验证码泄漏验证">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Day51 WEB攻防-通用漏洞&amp;验证码识别&amp;复用&amp;调用&amp;找回密码重定向&amp;状态值">
+<meta property="og:url" content="http://example.com/2023/03/08/Day51-WEB%E6%94%BB%E9%98%B2-%E9%80%9A%E7%94%A8%E6%BC%8F%E6%B4%9E-%E9%AA%8C%E8%AF%81%E7%A0%81%E8%AF%86%E5%88%AB-%E5%A4%8D%E7%94%A8-%E8%B0%83%E7%94%A8-%E6%89%BE%E5%9B%9E%E5%AF%86%E7%A0%81%E9%87%8D%E5%AE%9A%E5%90%91-%E7%8A%B6%E6%80%81%E5%80%BC/index.html">
+<meta property="og:site_name" content="ai潼">
+<meta property="og:description" content="#知识点：1、找回密码逻辑机制-回显&amp;验证码&amp;指向 2、验证码验证安全机制-爆破&amp;复用&amp;识别 3、找回密码-客户端回显&amp;Response状态值&amp;修改重定向 4、验证码技术-验证码爆破，验证码复用，验证码识别等 #详细点：找回密码流程安全：1、用回显状态判断-res前端判断不安全 2、用用户名重定向-修改标示绕过验证 3、验证码回显显示-验证码泄漏验证">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://pic3.zhimg.com/v2-6b4b0457594f7a81e7cfe771c193db82_r.jpg">
+<meta property="article:published_time" content="2023-03-08T15:27:33.000Z">
+<meta property="article:modified_time" content="2023-03-09T09:25:00.361Z">
+<meta property="article:author" content="pwy">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://pic3.zhimg.com/v2-6b4b0457594f7a81e7cfe771c193db82_r.jpg"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="http://example.com/2023/03/08/Day51-WEB%E6%94%BB%E9%98%B2-%E9%80%9A%E7%94%A8%E6%BC%8F%E6%B4%9E-%E9%AA%8C%E8%AF%81%E7%A0%81%E8%AF%86%E5%88%AB-%E5%A4%8D%E7%94%A8-%E8%B0%83%E7%94%A8-%E6%89%BE%E5%9B%9E%E5%AF%86%E7%A0%81%E9%87%8D%E5%AE%9A%E5%90%91-%E7%8A%B6%E6%80%81%E5%80%BC/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  }
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Day51 WEB攻防-通用漏洞&验证码识别&复用&调用&找回密码重定向&状态值',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2023-03-09 17:25:00'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = url => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      link.onload = () => resolve()
+      link.onerror = () => reject()
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/atom.xml" title="ai潼" type="application/atom+xml">
+</head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/tt.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">15</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">0</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">1</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fa fa-graduation-cap"></i><span> 博文</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/categories/"><i class="fa-fw fa fa-archive"></i><span> 分类</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/archives/"><i class="fa-fw fa fa-folder-open"></i><span> 归档</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 生活</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/shuoshuo/"><i class="fa-fw fa fa-comments-o"></i><span> 分享</span></a></li><li><a class="site-page child" href="/photos/"><i class="fa-fw fa fa-camera-retro"></i><span> 相册</span></a></li><li><a class="site-page child" href="/music/"><i class="fa-fw fa fa-music"></i><span> 音乐</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> 影视</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/links/"><i class="fa-fw fa fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/comment/"><i class="fa-fw fa fa-paper-plane"></i><span> 留言板</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于笔者</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://pic3.zhimg.com/v2-6b4b0457594f7a81e7cfe771c193db82_r.jpg')"><nav id="nav"><span id="blog-info"><a href="/" title="ai潼"><span class="site-name">ai潼</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fa fa-graduation-cap"></i><span> 博文</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/categories/"><i class="fa-fw fa fa-archive"></i><span> 分类</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/archives/"><i class="fa-fw fa fa-folder-open"></i><span> 归档</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 生活</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/shuoshuo/"><i class="fa-fw fa fa-comments-o"></i><span> 分享</span></a></li><li><a class="site-page child" href="/photos/"><i class="fa-fw fa fa-camera-retro"></i><span> 相册</span></a></li><li><a class="site-page child" href="/music/"><i class="fa-fw fa fa-music"></i><span> 音乐</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> 影视</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/links/"><i class="fa-fw fa fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/comment/"><i class="fa-fw fa fa-paper-plane"></i><span> 留言板</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于笔者</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">Day51 WEB攻防-通用漏洞&amp;验证码识别&amp;复用&amp;调用&amp;找回密码重定向&amp;状态值</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2023-03-08T15:27:33.000Z" title="发表于 2023-03-08 23:27:33">2023-03-08</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2023-03-09T09:25:00.361Z" title="更新于 2023-03-09 17:25:00">2023-03-09</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/Web%E6%94%BB%E9%98%B2/">Web攻防</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="Day51 WEB攻防-通用漏洞&amp;验证码识别&amp;复用&amp;调用&amp;找回密码重定向&amp;状态值"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h3 id="知识点："><a href="#知识点：" class="headerlink" title="#知识点："></a>#知识点：</h3><p>1、找回密码逻辑机制-回显&amp;验证码&amp;指向</p>
+<p>2、验证码验证安全机制-爆破&amp;复用&amp;识别</p>
+<p>3、找回密码-客户端回显&amp;Response状态值&amp;修改重定向</p>
+<p>4、验证码技术-验证码爆破，验证码复用，验证码识别等</p>
+<h3 id="详细点："><a href="#详细点：" class="headerlink" title="#详细点："></a>#详细点：</h3><h4 id="找回密码流程安全："><a href="#找回密码流程安全：" class="headerlink" title="找回密码流程安全："></a>找回密码流程安全：</h4><p>1、用回显状态判断-res前端判断不安全</p>
+<p>2、用用户名重定向-修改标示绕过验证</p>
+<p>3、验证码回显显示-验证码泄漏验证虚设</p>
+<p>4、验证码简单机制-验证码过于简单爆破</p>
+<h4 id="验证码绕过安全："><a href="#验证码绕过安全：" class="headerlink" title="验证码绕过安全："></a>验证码绕过安全：</h4><p>1、验证码简单机制-验证码过于简单爆破</p>
+<p>2、验证码重复使用-验证码验证机制绕过</p>
+<p>3、验证码智能识别-验证码图形码被识别</p>
+<p>4、验证码接口调用-验证码触发机制枚举</p>
+<h3 id="安全修复方案："><a href="#安全修复方案：" class="headerlink" title="#安全修复方案："></a>#安全修复方案：</h3><p>找回机制要进行每一步验证-防绕过重定向</p>
+<p>找回机制要进行服务端验证-防res数据修改</p>
+<p>找回机制要控制验证码安全-防验证码攻击</p>
+<p>验证码接口需验证后被调用-防接口被乱调用</p>
+<p>验证码引用智能化人工判断-防验证码被识别</p>
+<p>验证码采用时间段生效失效-防验证码被复用</p>
+<h3 id="演示案例："><a href="#演示案例：" class="headerlink" title="演示案例："></a>演示案例：</h3><p>➢ phpun-res值修改&amp;验证码回显&amp;爆破</p>
+<p>➢ 某APP-res值修改&amp;验证码接口调用&amp;复用</p>
+<p>➢ seacms-验证码识别&amp;找回机制对应值修改</p>
+<h4 id="phpun-res值修改-amp-验证码回显-amp-爆破"><a href="#phpun-res值修改-amp-验证码回显-amp-爆破" class="headerlink" title="#phpun-res值修改&amp;验证码回显&amp;爆破"></a>#phpun-res值修改&amp;验证码回显&amp;爆破</h4><h4 id="1、res修改-绑定手机号时修改返回状态值判定通过"><a href="#1、res修改-绑定手机号时修改返回状态值判定通过" class="headerlink" title="1、res修改-绑定手机号时修改返回状态值判定通过"></a>1、res修改-绑定手机号时修改返回状态值判定通过</h4><p>绑定手机号，假设验证码不知道，随便先输入一个，点击响应数据包</p>
+<p><img src="/../images/Day51-WEB%E6%94%BB%E9%98%B2-%E9%80%9A%E7%94%A8%E6%BC%8F%E6%B4%9E-%E9%AA%8C%E8%AF%81%E7%A0%81%E8%AF%86%E5%88%AB-%E5%A4%8D%E7%94%A8-%E8%B0%83%E7%94%A8-%E6%89%BE%E5%9B%9E%E5%AF%86%E7%A0%81%E9%87%8D%E5%AE%9A%E5%90%91-%E7%8A%B6%E6%80%81%E5%80%BC/image-20230309132011889.png" alt="image-20230309132011889"></p>
+<p>验证码错误回显为3</p>
+<p><img src="/../images/Day51-WEB%E6%94%BB%E9%98%B2-%E9%80%9A%E7%94%A8%E6%BC%8F%E6%B4%9E-%E9%AA%8C%E8%AF%81%E7%A0%81%E8%AF%86%E5%88%AB-%E5%A4%8D%E7%94%A8-%E8%B0%83%E7%94%A8-%E6%89%BE%E5%9B%9E%E5%AF%86%E7%A0%81%E9%87%8D%E5%AE%9A%E5%90%91-%E7%8A%B6%E6%80%81%E5%80%BC/image-20230309132109034.png" alt="image-20230309132109034"></p>
+<p>当验证码正确时，此处返回为1，那么可以在输入错误的验证码后修改响应数据包的返回值为1，即可绑定成功（具体会不会成功要看它是否是前端验证，所以提示成功也不一定成功，可能是后端验证）</p>
+<h5 id="2、验证码回显-绑定手机号时验证码前端泄漏被获取"><a href="#2、验证码回显-绑定手机号时验证码前端泄漏被获取" class="headerlink" title="2、验证码回显-绑定手机号时验证码前端泄漏被获取"></a>2、验证码回显-绑定手机号时验证码前端泄漏被获取</h5><p>同样此处绑定手机号，假设验证码不知道，随便先输入一个</p>
+<p><img src="/../images/Day51-WEB%E6%94%BB%E9%98%B2-%E9%80%9A%E7%94%A8%E6%BC%8F%E6%B4%9E-%E9%AA%8C%E8%AF%81%E7%A0%81%E8%AF%86%E5%88%AB-%E5%A4%8D%E7%94%A8-%E8%B0%83%E7%94%A8-%E6%89%BE%E5%9B%9E%E5%AF%86%E7%A0%81%E9%87%8D%E5%AE%9A%E5%90%91-%E7%8A%B6%E6%80%81%E5%80%BC/image-20230309131557198.png" alt="image-20230309131557198"></p>
+<p>保存抓包，发现验证码在cookie显示了，改成cookie里面的值后绑定成功</p>
+<p><img src="/../images/Day51-WEB%E6%94%BB%E9%98%B2-%E9%80%9A%E7%94%A8%E6%BC%8F%E6%B4%9E-%E9%AA%8C%E8%AF%81%E7%A0%81%E8%AF%86%E5%88%AB-%E5%A4%8D%E7%94%A8-%E8%B0%83%E7%94%A8-%E6%89%BE%E5%9B%9E%E5%AF%86%E7%A0%81%E9%87%8D%E5%AE%9A%E5%90%91-%E7%8A%B6%E6%80%81%E5%80%BC/image-20230309131655808.png" alt="image-20230309131655808"></p>
+<h4 id="3、验证码爆破-知道验证码规矩进行无次数限制爆破"><a href="#3、验证码爆破-知道验证码规矩进行无次数限制爆破" class="headerlink" title="3、验证码爆破-知道验证码规矩进行无次数限制爆破"></a>3、验证码爆破-知道验证码规矩进行无次数限制爆破</h4><p>由此处可以知道验证码是6位的，如果说对输入验证的次数没有要求的话（即不会改变验证码），就可以用burp的intruder模块爆破</p>
+<p><img src="/../images/Day51-WEB%E6%94%BB%E9%98%B2-%E9%80%9A%E7%94%A8%E6%BC%8F%E6%B4%9E-%E9%AA%8C%E8%AF%81%E7%A0%81%E8%AF%86%E5%88%AB-%E5%A4%8D%E7%94%A8-%E8%B0%83%E7%94%A8-%E6%89%BE%E5%9B%9E%E5%AF%86%E7%A0%81%E9%87%8D%E5%AE%9A%E5%90%91-%E7%8A%B6%E6%80%81%E5%80%BC/image-20230309132710837.png" alt="image-20230309132710837"></p>
+<p>搜索哪个返回值里面是1</p>
+<p><img src="/../images/Day51-WEB%E6%94%BB%E9%98%B2-%E9%80%9A%E7%94%A8%E6%BC%8F%E6%B4%9E-%E9%AA%8C%E8%AF%81%E7%A0%81%E8%AF%86%E5%88%AB-%E5%A4%8D%E7%94%A8-%E8%B0%83%E7%94%A8-%E6%89%BE%E5%9B%9E%E5%AF%86%E7%A0%81%E9%87%8D%E5%AE%9A%E5%90%91-%E7%8A%B6%E6%80%81%E5%80%BC/image-20230309133057982.png" alt="image-20230309133057982"></p>
+<h4 id="某APP-res值修改-amp-验证码接口调用-amp-复用"><a href="#某APP-res值修改-amp-验证码接口调用-amp-复用" class="headerlink" title="#某APP-res值修改&amp;验证码接口调用&amp;复用"></a>#某APP-res值修改&amp;验证码接口调用&amp;复用</h4><h4 id="1、res修改-找回密码修改返回状态值判定验证通过"><a href="#1、res修改-找回密码修改返回状态值判定验证通过" class="headerlink" title="1、res修改-找回密码修改返回状态值判定验证通过"></a>1、res修改-找回密码修改返回状态值判定验证通过</h4><p><img src="/../images/Day51-WEB%E6%94%BB%E9%98%B2-%E9%80%9A%E7%94%A8%E6%BC%8F%E6%B4%9E-%E9%AA%8C%E8%AF%81%E7%A0%81%E8%AF%86%E5%88%AB-%E5%A4%8D%E7%94%A8-%E8%B0%83%E7%94%A8-%E6%89%BE%E5%9B%9E%E5%AF%86%E7%A0%81%E9%87%8D%E5%AE%9A%E5%90%91-%E7%8A%B6%E6%80%81%E5%80%BC/image-20230309133453848.png" alt="image-20230309133453848"></p>
+<p>随便输入错误的验证码</p>
+<p><img src="/../images/Day51-WEB%E6%94%BB%E9%98%B2-%E9%80%9A%E7%94%A8%E6%BC%8F%E6%B4%9E-%E9%AA%8C%E8%AF%81%E7%A0%81%E8%AF%86%E5%88%AB-%E5%A4%8D%E7%94%A8-%E8%B0%83%E7%94%A8-%E6%89%BE%E5%9B%9E%E5%AF%86%E7%A0%81%E9%87%8D%E5%AE%9A%E5%90%91-%E7%8A%B6%E6%80%81%E5%80%BC/image-20230309133628521.png" alt="image-20230309133628521"></p>
+<p>点击返回数据包</p>
+<p><img src="/../images/Day51-WEB%E6%94%BB%E9%98%B2-%E9%80%9A%E7%94%A8%E6%BC%8F%E6%B4%9E-%E9%AA%8C%E8%AF%81%E7%A0%81%E8%AF%86%E5%88%AB-%E5%A4%8D%E7%94%A8-%E8%B0%83%E7%94%A8-%E6%89%BE%E5%9B%9E%E5%AF%86%E7%A0%81%E9%87%8D%E5%AE%9A%E5%90%91-%E7%8A%B6%E6%80%81%E5%80%BC/image-20230309133727892.png" alt="image-20230309133727892"></p>
+<p>将此处的错误回显改为验证码正确的回显</p>
+<p><img src="/../images/Day51-WEB%E6%94%BB%E9%98%B2-%E9%80%9A%E7%94%A8%E6%BC%8F%E6%B4%9E-%E9%AA%8C%E8%AF%81%E7%A0%81%E8%AF%86%E5%88%AB-%E5%A4%8D%E7%94%A8-%E8%B0%83%E7%94%A8-%E6%89%BE%E5%9B%9E%E5%AF%86%E7%A0%81%E9%87%8D%E5%AE%9A%E5%90%91-%E7%8A%B6%E6%80%81%E5%80%BC/image-20230309134833288.png" alt="image-20230309134833288"></p>
+<p>发现可以重置密码了</p>
+<p><img src="/../images/Day51-WEB%E6%94%BB%E9%98%B2-%E9%80%9A%E7%94%A8%E6%BC%8F%E6%B4%9E-%E9%AA%8C%E8%AF%81%E7%A0%81%E8%AF%86%E5%88%AB-%E5%A4%8D%E7%94%A8-%E8%B0%83%E7%94%A8-%E6%89%BE%E5%9B%9E%E5%AF%86%E7%A0%81%E9%87%8D%E5%AE%9A%E5%90%91-%E7%8A%B6%E6%80%81%E5%80%BC/image-20230309134916415.png" alt="image-20230309134916415"></p>
+<h4 id="2、验证码接口调用-抓当前发送验证码数据包后调用"><a href="#2、验证码接口调用-抓当前发送验证码数据包后调用" class="headerlink" title="2、验证码接口调用-抓当前发送验证码数据包后调用"></a>2、验证码接口调用-抓当前发送验证码数据包后调用</h4><p>输入号码后直接点获取手机验证码行不通，因为要先输入验证码</p>
+<p><img src="/../images/Day51-WEB%E6%94%BB%E9%98%B2-%E9%80%9A%E7%94%A8%E6%BC%8F%E6%B4%9E-%E9%AA%8C%E8%AF%81%E7%A0%81%E8%AF%86%E5%88%AB-%E5%A4%8D%E7%94%A8-%E8%B0%83%E7%94%A8-%E6%89%BE%E5%9B%9E%E5%AF%86%E7%A0%81%E9%87%8D%E5%AE%9A%E5%90%91-%E7%8A%B6%E6%80%81%E5%80%BC/image-20230309135252411.png" alt="image-20230309135252411"></p>
+<p>但是此处，因为验证码可以复用，所以点击获取手机验证码抓包，可以不断更改手机号码造成短信轰炸，正常安全的，每点击一次获取手机验证码都会刷新一次验证码，从而继续执行先输入图片验证码再获取短信验证码的逻辑</p>
+<p><img src="/../images/Day51-WEB%E6%94%BB%E9%98%B2-%E9%80%9A%E7%94%A8%E6%BC%8F%E6%B4%9E-%E9%AA%8C%E8%AF%81%E7%A0%81%E8%AF%86%E5%88%AB-%E5%A4%8D%E7%94%A8-%E8%B0%83%E7%94%A8-%E6%89%BE%E5%9B%9E%E5%AF%86%E7%A0%81%E9%87%8D%E5%AE%9A%E5%90%91-%E7%8A%B6%E6%80%81%E5%80%BC/image-20230309135420075.png" alt="image-20230309135420075"></p>
+<p>正确的措施：</p>
+<p>获取：</p>
+<p>每一分钟才能触发一次发送验证码 防止乱用</p>
+<p>图像验证码是否正确 防止是机器，确保是人工</p>
+<h4 id="3、验证码复用-抓第一次验证通过的验证码进行复用"><a href="#3、验证码复用-抓第一次验证通过的验证码进行复用" class="headerlink" title="3、验证码复用-抓第一次验证通过的验证码进行复用"></a>3、验证码复用-抓第一次验证通过的验证码进行复用</h4><p>存在复用：第一次用那个验证码发包后抓取，后面继续发送这个数据包依然可行，没有提示需要填写新的验证码</p>
+<p>不存在复用：发一次数据包就更换了当前的验证码</p>
+<h3 id="seacms-验证码识别-amp-找回机制对应值修改"><a href="#seacms-验证码识别-amp-找回机制对应值修改" class="headerlink" title="#seacms-验证码识别&amp;找回机制对应值修改"></a>#seacms-验证码识别&amp;找回机制对应值修改</h3><h4 id="找回机制对应值修改："><a href="#找回机制对应值修改：" class="headerlink" title="找回机制对应值修改："></a>找回机制对应值修改：</h4><p>注册两个帐号（xiaosedi1 &amp;&amp; xiaosedi2），尝试找回(xiaosedi1)密码，重置连接重定向绕过</p>
+<p><img src="/../images/Day51-WEB%E6%94%BB%E9%98%B2-%E9%80%9A%E7%94%A8%E6%BC%8F%E6%B4%9E-%E9%AA%8C%E8%AF%81%E7%A0%81%E8%AF%86%E5%88%AB-%E5%A4%8D%E7%94%A8-%E8%B0%83%E7%94%A8-%E6%89%BE%E5%9B%9E%E5%AF%86%E7%A0%81%E9%87%8D%E5%AE%9A%E5%90%91-%E7%8A%B6%E6%80%81%E5%80%BC/image-20230309142308759.png" alt="image-20230309142308759"></p>
+<p>跳转到此界面</p>
+<p><img src="/../images/Day51-WEB%E6%94%BB%E9%98%B2-%E9%80%9A%E7%94%A8%E6%BC%8F%E6%B4%9E-%E9%AA%8C%E8%AF%81%E7%A0%81%E8%AF%86%E5%88%AB-%E5%A4%8D%E7%94%A8-%E8%B0%83%E7%94%A8-%E6%89%BE%E5%9B%9E%E5%AF%86%E7%A0%81%E9%87%8D%E5%AE%9A%E5%90%91-%E7%8A%B6%E6%80%81%E5%80%BC/image-20230309142453809.png" alt="image-20230309142453809"></p>
+<p>复制链接到另一处，尝试更改repswname&#x3D;xiaosedi2，发现失败</p>
+<p><img src="/../images/Day51-WEB%E6%94%BB%E9%98%B2-%E9%80%9A%E7%94%A8%E6%BC%8F%E6%B4%9E-%E9%AA%8C%E8%AF%81%E7%A0%81%E8%AF%86%E5%88%AB-%E5%A4%8D%E7%94%A8-%E8%B0%83%E7%94%A8-%E6%89%BE%E5%9B%9E%E5%AF%86%E7%A0%81%E9%87%8D%E5%AE%9A%E5%90%91-%E7%8A%B6%E6%80%81%E5%80%BC/image-20230309142651447.png" alt="image-20230309142651447"></p>
+<p>代码审计后分析Poc：</p>
+<p>member.php?mod&#x3D;repsw3&amp;repswcode&#x3D;y&amp;repswname&#x3D;targetUser</p>
+<p>系统默认新用户的repswname&#x3D;y改过密码后才会更改为字符串</p>
+<p><img src="/../images/Day51-WEB%E6%94%BB%E9%98%B2-%E9%80%9A%E7%94%A8%E6%BC%8F%E6%B4%9E-%E9%AA%8C%E8%AF%81%E7%A0%81%E8%AF%86%E5%88%AB-%E5%A4%8D%E7%94%A8-%E8%B0%83%E7%94%A8-%E6%89%BE%E5%9B%9E%E5%AF%86%E7%A0%81%E9%87%8D%E5%AE%9A%E5%90%91-%E7%8A%B6%E6%80%81%E5%80%BC/image-20230309143533271.png" alt="image-20230309143533271"></p>
+<h4 id="验证码识别：xp-CAPTCHA"><a href="#验证码识别：xp-CAPTCHA" class="headerlink" title="验证码识别：xp_CAPTCHA"></a>验证码识别：xp_CAPTCHA</h4><p><a target="_blank" rel="noopener" href="https://github.com/c0ny1/captcha-killer">https://github.com/c0ny1/captcha-killer</a></p>
+<p><a target="_blank" rel="noopener" href="https://github.com/smxiazi/NEW_xp_CAPTCHA">https://github.com/smxiazi/NEW_xp_CAPTCHA</a></p>
+<p>使用环境：windows 10 python3.6.5</p>
+<p>安装使用：具体看直播操作</p>
+<p>1、burp安装jypython后导入py文件</p>
+<p>2、安装所需库后python运行server.py</p>
+<p>3、抓操作数据包后设置参数设置引用</p>
+<p>参考案例：<a target="_blank" rel="noopener" href="https://www.cnblogs.com/punished/p/14746970.html">https://www.cnblogs.com/punished/p/14746970.html</a></p>
+<p>应用：爆破密码时，接口调用时，测试其他时等</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="http://example.com">pwy</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://example.com/2023/03/08/Day51-WEB%E6%94%BB%E9%98%B2-%E9%80%9A%E7%94%A8%E6%BC%8F%E6%B4%9E-%E9%AA%8C%E8%AF%81%E7%A0%81%E8%AF%86%E5%88%AB-%E5%A4%8D%E7%94%A8-%E8%B0%83%E7%94%A8-%E6%89%BE%E5%9B%9E%E5%AF%86%E7%A0%81%E9%87%8D%E5%AE%9A%E5%90%91-%E7%8A%B6%E6%80%81%E5%80%BC/">http://example.com/2023/03/08/Day51-WEB攻防-通用漏洞-验证码识别-复用-调用-找回密码重定向-状态值/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://example.com" target="_blank">ai潼</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"></div><div class="post_share"><div class="social-share" data-image="https://pic3.zhimg.com/v2-6b4b0457594f7a81e7cfe771c193db82_r.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2023/03/09/Day52-WEB%E6%94%BB%E9%98%B2-%E9%80%9A%E7%94%A8%E6%BC%8F%E6%B4%9E-%E5%BC%B1%E5%8F%A3%E4%BB%A4%E5%AE%89%E5%85%A8-%E7%A4%BE%E5%B7%A5%E5%AD%97%E5%85%B8%E7%94%9F%E6%88%90-%E6%9C%8D%E5%8A%A1%E5%8D%8F%E8%AE%AE-Web%E5%BA%94%E7%94%A8/" title="Day52 WEB攻防-通用漏洞&amp;弱口令安全&amp;社工字典生成&amp;服务协议&amp;Web应用"><img class="cover" src="https://pic1.zhimg.com/80/v2-e81ea1ccc330ff2206ca340838c266c0_1440w.webp" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">Day52 WEB攻防-通用漏洞&amp;弱口令安全&amp;社工字典生成&amp;服务协议&amp;Web应用</div></div></a></div><div class="next-post pull-right"><a href="/2023/02/24/Day50-WEB%E6%94%BB%E9%98%B2-%E9%80%9A%E7%94%A8%E6%BC%8F%E6%B4%9E-%E8%B4%AD%E4%B9%B0%E6%94%AF%E4%BB%98%E9%80%BB%E8%BE%91-%E6%95%B0%E6%8D%AE%E7%AF%A1%E6%94%B9-%E8%AF%B7%E6%B1%82%E9%87%8D%E6%94%BE-%E6%8E%A5%E5%8F%A3%E6%9B%BF%E6%8D%A2/" title="Day50 WEB攻防-通用漏洞&amp;购买支付逻辑&amp;数据篡改&amp;请求重放&amp;接口替换"><img class="cover" src="https://gss0.baidu.com/9vo3dSag_xI4khGko9WTAnF6hhy/zhidao/pic/item/adaf2edda3cc7cd98c9d77213b01213fb90e9191.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">Day50 WEB攻防-通用漏洞&amp;购买支付逻辑&amp;数据篡改&amp;请求重放&amp;接口替换</div></div></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/tt.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">pwy</div><div class="author-info__description">自律+上进+野心+机遇=成功！</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">15</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">0</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">1</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%9F%A5%E8%AF%86%E7%82%B9%EF%BC%9A"><span class="toc-number">1.</span> <span class="toc-text">#知识点：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AF%A6%E7%BB%86%E7%82%B9%EF%BC%9A"><span class="toc-number">2.</span> <span class="toc-text">#详细点：</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%89%BE%E5%9B%9E%E5%AF%86%E7%A0%81%E6%B5%81%E7%A8%8B%E5%AE%89%E5%85%A8%EF%BC%9A"><span class="toc-number">2.1.</span> <span class="toc-text">找回密码流程安全：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%AA%8C%E8%AF%81%E7%A0%81%E7%BB%95%E8%BF%87%E5%AE%89%E5%85%A8%EF%BC%9A"><span class="toc-number">2.2.</span> <span class="toc-text">验证码绕过安全：</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%89%E5%85%A8%E4%BF%AE%E5%A4%8D%E6%96%B9%E6%A1%88%EF%BC%9A"><span class="toc-number">3.</span> <span class="toc-text">#安全修复方案：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%BC%94%E7%A4%BA%E6%A1%88%E4%BE%8B%EF%BC%9A"><span class="toc-number">4.</span> <span class="toc-text">演示案例：</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#phpun-res%E5%80%BC%E4%BF%AE%E6%94%B9-amp-%E9%AA%8C%E8%AF%81%E7%A0%81%E5%9B%9E%E6%98%BE-amp-%E7%88%86%E7%A0%B4"><span class="toc-number">4.1.</span> <span class="toc-text">#phpun-res值修改&amp;验证码回显&amp;爆破</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#1%E3%80%81res%E4%BF%AE%E6%94%B9-%E7%BB%91%E5%AE%9A%E6%89%8B%E6%9C%BA%E5%8F%B7%E6%97%B6%E4%BF%AE%E6%94%B9%E8%BF%94%E5%9B%9E%E7%8A%B6%E6%80%81%E5%80%BC%E5%88%A4%E5%AE%9A%E9%80%9A%E8%BF%87"><span class="toc-number">4.2.</span> <span class="toc-text">1、res修改-绑定手机号时修改返回状态值判定通过</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#2%E3%80%81%E9%AA%8C%E8%AF%81%E7%A0%81%E5%9B%9E%E6%98%BE-%E7%BB%91%E5%AE%9A%E6%89%8B%E6%9C%BA%E5%8F%B7%E6%97%B6%E9%AA%8C%E8%AF%81%E7%A0%81%E5%89%8D%E7%AB%AF%E6%B3%84%E6%BC%8F%E8%A2%AB%E8%8E%B7%E5%8F%96"><span class="toc-number">4.2.1.</span> <span class="toc-text">2、验证码回显-绑定手机号时验证码前端泄漏被获取</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3%E3%80%81%E9%AA%8C%E8%AF%81%E7%A0%81%E7%88%86%E7%A0%B4-%E7%9F%A5%E9%81%93%E9%AA%8C%E8%AF%81%E7%A0%81%E8%A7%84%E7%9F%A9%E8%BF%9B%E8%A1%8C%E6%97%A0%E6%AC%A1%E6%95%B0%E9%99%90%E5%88%B6%E7%88%86%E7%A0%B4"><span class="toc-number">4.3.</span> <span class="toc-text">3、验证码爆破-知道验证码规矩进行无次数限制爆破</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%9F%90APP-res%E5%80%BC%E4%BF%AE%E6%94%B9-amp-%E9%AA%8C%E8%AF%81%E7%A0%81%E6%8E%A5%E5%8F%A3%E8%B0%83%E7%94%A8-amp-%E5%A4%8D%E7%94%A8"><span class="toc-number">4.4.</span> <span class="toc-text">#某APP-res值修改&amp;验证码接口调用&amp;复用</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#1%E3%80%81res%E4%BF%AE%E6%94%B9-%E6%89%BE%E5%9B%9E%E5%AF%86%E7%A0%81%E4%BF%AE%E6%94%B9%E8%BF%94%E5%9B%9E%E7%8A%B6%E6%80%81%E5%80%BC%E5%88%A4%E5%AE%9A%E9%AA%8C%E8%AF%81%E9%80%9A%E8%BF%87"><span class="toc-number">4.5.</span> <span class="toc-text">1、res修改-找回密码修改返回状态值判定验证通过</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2%E3%80%81%E9%AA%8C%E8%AF%81%E7%A0%81%E6%8E%A5%E5%8F%A3%E8%B0%83%E7%94%A8-%E6%8A%93%E5%BD%93%E5%89%8D%E5%8F%91%E9%80%81%E9%AA%8C%E8%AF%81%E7%A0%81%E6%95%B0%E6%8D%AE%E5%8C%85%E5%90%8E%E8%B0%83%E7%94%A8"><span class="toc-number">4.6.</span> <span class="toc-text">2、验证码接口调用-抓当前发送验证码数据包后调用</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3%E3%80%81%E9%AA%8C%E8%AF%81%E7%A0%81%E5%A4%8D%E7%94%A8-%E6%8A%93%E7%AC%AC%E4%B8%80%E6%AC%A1%E9%AA%8C%E8%AF%81%E9%80%9A%E8%BF%87%E7%9A%84%E9%AA%8C%E8%AF%81%E7%A0%81%E8%BF%9B%E8%A1%8C%E5%A4%8D%E7%94%A8"><span class="toc-number">4.7.</span> <span class="toc-text">3、验证码复用-抓第一次验证通过的验证码进行复用</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#seacms-%E9%AA%8C%E8%AF%81%E7%A0%81%E8%AF%86%E5%88%AB-amp-%E6%89%BE%E5%9B%9E%E6%9C%BA%E5%88%B6%E5%AF%B9%E5%BA%94%E5%80%BC%E4%BF%AE%E6%94%B9"><span class="toc-number">5.</span> <span class="toc-text">#seacms-验证码识别&amp;找回机制对应值修改</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%89%BE%E5%9B%9E%E6%9C%BA%E5%88%B6%E5%AF%B9%E5%BA%94%E5%80%BC%E4%BF%AE%E6%94%B9%EF%BC%9A"><span class="toc-number">5.1.</span> <span class="toc-text">找回机制对应值修改：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%AA%8C%E8%AF%81%E7%A0%81%E8%AF%86%E5%88%AB%EF%BC%9Axp-CAPTCHA"><span class="toc-number">5.2.</span> <span class="toc-text">验证码识别：xp_CAPTCHA</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2023/03/09/Day52-WEB%E6%94%BB%E9%98%B2-%E9%80%9A%E7%94%A8%E6%BC%8F%E6%B4%9E-%E5%BC%B1%E5%8F%A3%E4%BB%A4%E5%AE%89%E5%85%A8-%E7%A4%BE%E5%B7%A5%E5%AD%97%E5%85%B8%E7%94%9F%E6%88%90-%E6%9C%8D%E5%8A%A1%E5%8D%8F%E8%AE%AE-Web%E5%BA%94%E7%94%A8/" title="Day52 WEB攻防-通用漏洞&amp;弱口令安全&amp;社工字典生成&amp;服务协议&amp;Web应用"><img src="https://pic1.zhimg.com/80/v2-e81ea1ccc330ff2206ca340838c266c0_1440w.webp" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Day52 WEB攻防-通用漏洞&amp;弱口令安全&amp;社工字典生成&amp;服务协议&amp;Web应用"/></a><div class="content"><a class="title" href="/2023/03/09/Day52-WEB%E6%94%BB%E9%98%B2-%E9%80%9A%E7%94%A8%E6%BC%8F%E6%B4%9E-%E5%BC%B1%E5%8F%A3%E4%BB%A4%E5%AE%89%E5%85%A8-%E7%A4%BE%E5%B7%A5%E5%AD%97%E5%85%B8%E7%94%9F%E6%88%90-%E6%9C%8D%E5%8A%A1%E5%8D%8F%E8%AE%AE-Web%E5%BA%94%E7%94%A8/" title="Day52 WEB攻防-通用漏洞&amp;弱口令安全&amp;社工字典生成&amp;服务协议&amp;Web应用">Day52 WEB攻防-通用漏洞&amp;弱口令安全&amp;社工字典生成&amp;服务协议&amp;Web应用</a><time datetime="2023-03-09T06:52:50.000Z" title="发表于 2023-03-09 14:52:50">2023-03-09</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/03/08/Day51-WEB%E6%94%BB%E9%98%B2-%E9%80%9A%E7%94%A8%E6%BC%8F%E6%B4%9E-%E9%AA%8C%E8%AF%81%E7%A0%81%E8%AF%86%E5%88%AB-%E5%A4%8D%E7%94%A8-%E8%B0%83%E7%94%A8-%E6%89%BE%E5%9B%9E%E5%AF%86%E7%A0%81%E9%87%8D%E5%AE%9A%E5%90%91-%E7%8A%B6%E6%80%81%E5%80%BC/" title="Day51 WEB攻防-通用漏洞&amp;验证码识别&amp;复用&amp;调用&amp;找回密码重定向&amp;状态值"><img src="https://pic3.zhimg.com/v2-6b4b0457594f7a81e7cfe771c193db82_r.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Day51 WEB攻防-通用漏洞&amp;验证码识别&amp;复用&amp;调用&amp;找回密码重定向&amp;状态值"/></a><div class="content"><a class="title" href="/2023/03/08/Day51-WEB%E6%94%BB%E9%98%B2-%E9%80%9A%E7%94%A8%E6%BC%8F%E6%B4%9E-%E9%AA%8C%E8%AF%81%E7%A0%81%E8%AF%86%E5%88%AB-%E5%A4%8D%E7%94%A8-%E8%B0%83%E7%94%A8-%E6%89%BE%E5%9B%9E%E5%AF%86%E7%A0%81%E9%87%8D%E5%AE%9A%E5%90%91-%E7%8A%B6%E6%80%81%E5%80%BC/" title="Day51 WEB攻防-通用漏洞&amp;验证码识别&amp;复用&amp;调用&amp;找回密码重定向&amp;状态值">Day51 WEB攻防-通用漏洞&amp;验证码识别&amp;复用&amp;调用&amp;找回密码重定向&amp;状态值</a><time datetime="2023-03-08T15:27:33.000Z" title="发表于 2023-03-08 23:27:33">2023-03-08</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/02/24/Day50-WEB%E6%94%BB%E9%98%B2-%E9%80%9A%E7%94%A8%E6%BC%8F%E6%B4%9E-%E8%B4%AD%E4%B9%B0%E6%94%AF%E4%BB%98%E9%80%BB%E8%BE%91-%E6%95%B0%E6%8D%AE%E7%AF%A1%E6%94%B9-%E8%AF%B7%E6%B1%82%E9%87%8D%E6%94%BE-%E6%8E%A5%E5%8F%A3%E6%9B%BF%E6%8D%A2/" title="Day50 WEB攻防-通用漏洞&amp;购买支付逻辑&amp;数据篡改&amp;请求重放&amp;接口替换"><img src="https://gss0.baidu.com/9vo3dSag_xI4khGko9WTAnF6hhy/zhidao/pic/item/adaf2edda3cc7cd98c9d77213b01213fb90e9191.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Day50 WEB攻防-通用漏洞&amp;购买支付逻辑&amp;数据篡改&amp;请求重放&amp;接口替换"/></a><div class="content"><a class="title" href="/2023/02/24/Day50-WEB%E6%94%BB%E9%98%B2-%E9%80%9A%E7%94%A8%E6%BC%8F%E6%B4%9E-%E8%B4%AD%E4%B9%B0%E6%94%AF%E4%BB%98%E9%80%BB%E8%BE%91-%E6%95%B0%E6%8D%AE%E7%AF%A1%E6%94%B9-%E8%AF%B7%E6%B1%82%E9%87%8D%E6%94%BE-%E6%8E%A5%E5%8F%A3%E6%9B%BF%E6%8D%A2/" title="Day50 WEB攻防-通用漏洞&amp;购买支付逻辑&amp;数据篡改&amp;请求重放&amp;接口替换">Day50 WEB攻防-通用漏洞&amp;购买支付逻辑&amp;数据篡改&amp;请求重放&amp;接口替换</a><time datetime="2023-02-24T05:24:52.000Z" title="发表于 2023-02-24 13:24:52">2023-02-24</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/02/03/Day49-WEB%E6%94%BB%E9%98%B2-%E9%80%9A%E7%94%A8%E6%BC%8F%E6%B4%9E-%E4%B8%9A%E5%8A%A1%E9%80%BB%E8%BE%91-%E6%B0%B4%E5%B9%B3%E5%9E%82%E7%9B%B4%E8%B6%8A%E6%9D%83-%E8%AE%BF%E9%97%AE%E6%8E%A7%E5%88%B6-%E8%84%86%E5%BC%B1%E9%AA%8C%E8%AF%81/" title="Day49 WEB攻防-通用漏洞&amp;业务逻辑&amp;水平垂直越权&amp;访问控制&amp;脆弱验证"><img src="https://pic4.zhimg.com/80/v2-080542549e30861aefcaa960b6ff26f7_1440w.webp" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Day49 WEB攻防-通用漏洞&amp;业务逻辑&amp;水平垂直越权&amp;访问控制&amp;脆弱验证"/></a><div class="content"><a class="title" href="/2023/02/03/Day49-WEB%E6%94%BB%E9%98%B2-%E9%80%9A%E7%94%A8%E6%BC%8F%E6%B4%9E-%E4%B8%9A%E5%8A%A1%E9%80%BB%E8%BE%91-%E6%B0%B4%E5%B9%B3%E5%9E%82%E7%9B%B4%E8%B6%8A%E6%9D%83-%E8%AE%BF%E9%97%AE%E6%8E%A7%E5%88%B6-%E8%84%86%E5%BC%B1%E9%AA%8C%E8%AF%81/" title="Day49 WEB攻防-通用漏洞&amp;业务逻辑&amp;水平垂直越权&amp;访问控制&amp;脆弱验证">Day49 WEB攻防-通用漏洞&amp;业务逻辑&amp;水平垂直越权&amp;访问控制&amp;脆弱验证</a><time datetime="2023-02-02T17:53:34.000Z" title="发表于 2023-02-03 01:53:34">2023-02-03</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/02/03/Day48-WEB%E6%94%BB%E9%98%B2-%E9%80%9A%E7%94%A8%E6%BC%8F%E6%B4%9E-Py%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96-%E9%93%BE%E6%9E%84%E9%80%A0-%E8%87%AA%E5%8A%A8%E5%AE%A1%E8%AE%A1bandit-%E9%AD%94%E6%9C%AF%E6%96%B9%E6%B3%95/" title="Day48 WEB攻防-通用漏洞&amp;Py反序列化&amp;链构造&amp;自动审计bandit&amp;魔术方法"><img src="https://pic4.zhimg.com/80/v2-af80b26c6bd5a71eba219eb1e10b579b_1440w.webp" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Day48 WEB攻防-通用漏洞&amp;Py反序列化&amp;链构造&amp;自动审计bandit&amp;魔术方法"/></a><div class="content"><a class="title" href="/2023/02/03/Day48-WEB%E6%94%BB%E9%98%B2-%E9%80%9A%E7%94%A8%E6%BC%8F%E6%B4%9E-Py%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96-%E9%93%BE%E6%9E%84%E9%80%A0-%E8%87%AA%E5%8A%A8%E5%AE%A1%E8%AE%A1bandit-%E9%AD%94%E6%9C%AF%E6%96%B9%E6%B3%95/" title="Day48 WEB攻防-通用漏洞&amp;Py反序列化&amp;链构造&amp;自动审计bandit&amp;魔术方法">Day48 WEB攻防-通用漏洞&amp;Py反序列化&amp;链构造&amp;自动审计bandit&amp;魔术方法</a><time datetime="2023-02-02T17:52:08.000Z" title="发表于 2023-02-03 01:52:08">2023-02-03</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2023 By pwy</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div></div></div><div id="search-mask"></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.min.js"></script><script src="/js/search/local-search.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
